@@ -1,0 +1,27 @@
+use Color8: {newColor};
+use StdIO: all except {print};
+use String: { string };
+use image: all;
+
+rgb[*] readJPEG( string name)
+{
+	img = JPEG::readJPEG( name);
+	return (rgb[*])img;
+}
+
+void writeJPEG( rgb[*] img_rgb, string name, int quality)
+{
+	img_rgb_t = to_type( img_rgb);
+	img = with {
+		( . <= iv <= .): newColor( img_rgb_t[iv]);
+	} : genarray( shape(img_rgb), Color8::white());
+	JPEG::writeJPEG( img, name, quality);
+}
+
+int main()
+{
+	img = readJPEG("images/feed.jpeg");
+	img_trans = transpose( img);
+	writeJPEG( img_trans, "images/trans.jpeg", 100);
+	return 0;
+}

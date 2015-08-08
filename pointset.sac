@@ -1,0 +1,232 @@
+module pointset;
+
+#define value greyscale
+//#define value rgb
+#define pt_t int[2]
+#define ps_t int[2,2]
+
+use value: all;
+use Random: all;
+use Clock: {gettime, sec};
+
+provide all;
+
+ps_t get_ps( value[*] img)
+{
+	return [ [0,0], shape( img) - 1];
+}
+
+ps_t get_ps( value[*] img, pt_t origin)
+{
+	return [ origin, origin + shape( img) - 1];
+}
+
+pt_t origin( ps_t pointset)
+{
+	return pointset[0];
+}
+
+int[.] ps_shape( ps_t pointset)
+{
+	return pointset[1] - pointset[0] + 1;
+}
+
+//only for positive origin
+value[*] get_image( ps_t pointset, value[*] img)
+{
+	o = pointset[0];
+	ps_img = with {
+		( o <= iv <= .): img[iv-o];
+		} : genarray( o + ps_shape( pointset), default_el( img));
+	return ps_img;
+}
+
+ps_t add_point( ps_t pointset, pt_t x)
+{
+	return [ pointset[0] + x, pointset[1] + x ];
+}
+
+ps_t sub_point( ps_t pointset, pt_t x)
+{
+	return [ pointset[0] - x, pointset[1] - x ];
+}
+
+pt_t sup( ps_t pointset)
+{
+	return pointset[1];
+}
+
+pt_t inf( ps_t pointset)
+{
+	return pointset[0];
+}
+
+pt_t choice( ps_t pointset)
+{
+	srandom( sec( gettime()));
+	r1 = random( pointset[0,0], pointset[1,0]);
+	r2 = random( pointset[1,0], pointset[1,1]);
+	x = [r1, r2];
+	return x;
+}
+
+int card( ps_t pointset)
+{
+	shp = ps_shape( pointset);
+	return shp[0]*shp[1];
+}
+
+/*void coords( ps_t pointset)
+{
+	a = pointset[0];	//upper left
+	b = pointset[1];	//bottom right
+	c = [ a[0], b[1] ];	//upper right
+	d = [ b[0], a[1] ];	//bottom left
+}*/
+
+int[+] get_points( value[*] img)
+{
+	ps_mat = with {
+		(. <= iv <= .): iv;
+		} : genarray( [shape(img)[0], shape(img)[1]], [0,0]);
+	ps = Array::reshape( [shape(img)[0]*shape(img)[1], 2], ps_mat);
+	return ps;
+}
+
+int[+] get_points( ps_t pointset, value[*] img)
+{
+	o = pointset[0];
+	ps_mat = with {
+		(. <= iv <= .): iv + o;
+		} : genarray( [shape(img)[0], shape(img)[1]], [0,0]);
+	ps = Array::reshape( [shape(img)[0]*shape(img)[1], 2], ps_mat);
+	return ps;
+}
+
+//to be deleted
+int[+] get_points( ps_t pointset, int[*] img)
+{
+	o = pointset[0];
+	ps_mat = with {
+		(. <= iv <= .): iv + o;
+		} : genarray( [shape(img)[0], shape(img)[1]], [0,0]);
+	ps = Array::reshape( [shape(img)[0]*shape(img)[1], 2], ps_mat);
+	return ps;
+}
+
+
+
+//set operations...
+
+//only for positive origin
+bool[*] get_canvas( ps_t pointset, int[.] canvas_shp)
+{
+	o = pointset[0];
+	end = pointset[1];
+	canvas = with {
+		( o <= iv <= end): true;
+		} : genarray( canvas_shp, false);
+	return canvas;
+}
+
+ps_t intersect_ps( ps_t ps1, ps_t ps2)
+{
+	a = Array::max( ps1[0,0], ps2[0,0]);
+	b = Array::max( ps1[0,1], ps2[0,1]);
+	c = Array::min( ps1[1,0], ps2[1,0]);
+	d = Array::min( ps1[1,1], ps2[1,1]);
+	return [ [a,b], [c,d] ];
+}
+
+value[*] intersect_ps( ps_t ps1, ps_t ps2, ps_t img_ps, value[*] img)
+{
+	c1_shp = ps1[0] + ps_shape( ps1);	
+	c2_shp = ps2[0] + ps_shape( ps2);
+	canvas_shp = [ Array::max( c1_shp[0], c2_shp[0]), Array::max( c1_shp[1], c2_shp[1]) ];
+
+	c1 = get_canvas( ps1, canvas_shp);
+	c2 = get_canvas( ps2, canvas_shp);
+	intersect = c1 & c2;
+	canvas_img = get_image( img_ps, img);
+	
+	return canvas_img * Array::toi( intersect);
+}
+
+ps_t union_ps( ps_t ps1, ps_t ps2)
+{
+	a = Array::min( ps1[0,0], ps2[0,0]);
+	b = Array::min( ps1[0,1], ps2[0,1]);
+	c = Array::max( ps1[1,0], ps2[1,0]);
+	d = Array::max( ps1[1,1], ps2[1,1]);
+	return [ [a,b], [c,d] ];
+}
+
+value[*] union_ps( ps_t ps1, ps_t ps2, ps_t img_ps, value[*] img)
+{
+	c1_shp = ps1[0] + ps_shape( ps1);	
+	c2_shp = ps2[0] + ps_shape( ps2);
+	canvas_shp = [ Array::max( c1_shp[0], c2_shp[0]), Array::max( c1_shp[1], c2_shp[1]) ];
+
+	o1 = ps1[0];
+	o2 = ps2[0];
+	end1 = ps1[1];
+	end2 = ps2[1];
+	union_ps = with {
+		( o1 <= iv <= end1): true;
+		( o2 <= iv <= end2): true;
+		} : genarray( canvas_shp, false);
+	
+	canvas_img = get_image( img_ps, img);
+	
+	return canvas_img * Array::toi( union_ps);
+}
+
+ps_t difference_ps( ps_t ps1, ps_t ps2)
+{
+	return union_ps( ps1, ps2);
+}
+
+value[*] difference_ps( ps_t ps1, ps_t ps2, ps_t img_ps, value[*]img)
+{
+	c1_shp = ps1[0] + ps_shape( ps1);	
+	c2_shp = ps2[0] + ps_shape( ps2);
+	canvas_shp = [ Array::max( c1_shp[0], c2_shp[0]), Array::max( c1_shp[1], c2_shp[1]) ];
+
+	c1 = get_canvas( ps1, canvas_shp);
+	c2 = get_canvas( ps2, canvas_shp);
+	diff = (c1 Array::| c2) & Array::!(c1 & c2); //xor
+
+	canvas_img = get_image( img_ps, img);
+	
+	return canvas_img * Array::toi( diff);
+}
+
+//how to use pt_t here?
+int[+] cartesian_onepoint( int[+] points1, int[+] points2, int pt_iv)
+{
+	cartesian = with {
+		(. <= iv <= .): [ points1[iv[0]], points2[pt_iv] ];
+	} : genarray( [ shape(points1)[0] ], [[0,0], [0,0]]);
+	return cartesian;
+}
+
+int[+] cartesian_product( ps_t ps_img1, value[*] img1, ps_t ps_img2, value[*] img2)
+{
+	points_img1 = get_points( ps_img1, img1);
+	points_img2 = get_points( ps_img2, img2);
+	
+	card1 = shape( points_img1)[0];
+	card2 = shape( points_img2)[0];
+
+	default_el = Array::genarray([card1,2,2],0);
+	c = with {
+		([0] <= iv < [card2]): cartesian_onepoint( points_img1, points_img2, iv[0]);
+	} : genarray([card2], default_el);
+	cartesian = Array::reshape( [card1*card2,2,2], c);
+	return cartesian;
+}
+
+value[*] domain_restriction( ps_t ps_img, value[*] img, ps_t pointset)
+{
+	return intersect_ps( ps_img, pointset, ps_img, img);
+}

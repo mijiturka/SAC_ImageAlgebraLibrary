@@ -1,0 +1,423 @@
+#ifdef INLINE
+#define INLINE inline
+#else
+#define INLINE
+#endif
+
+#define PASTER(x,y) x ## y
+#define FUNCTION(x,y) PASTER(x,y)
+
+INLINE
+value[+] linear_convolution( value[+] img, value[+] t)
+
+{
+
+	conv = with {
+
+		(. <= iv <= .): sum( img[iv] * t);
+
+		} : genarray( shape( img), default_el( img));
+
+	return conv;
+
+}
+
+INLINE
+value[+] max_convolution( value[+] img, value[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): max( img[iv] + t);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+INLINE
+value[+] min_convolution( value[+] img, value[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): min( img[iv] + t);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+INLINE
+value[+] convolution_2d( value[+] img, int[+] t)
+
+{
+	
+	return convolution_2d( img, FUNCTION(prepare_template_, value)( t));
+
+}
+
+INLINE
+value[+] convolution_2d( value[+] img, value[+] t)
+
+{
+
+	mn = ( shape( t) Array::+ 1) Array::/ 2;
+	tile_sh = 2 Array::* mn Array::- 1;
+
+	img_padded = pad_nm( img, t);	
+
+	result = with {
+
+		(. <= iv <= .): sum( tile( tile_sh, iv, img_padded) * t);
+
+		} : genarray( shape( img), default_el( img));
+
+	return result;
+
+}
+
+//unsure
+/*
+INLINE
+value[*] pow( value[*] img1, value[*] img2)
+
+{
+	
+	return (value[*]) Array::toi( pow_double( img1, img2));
+
+}*/
+
+INLINE
+value[+] template( value[+] img)
+
+{
+
+	return genarray( shape( img), default_el( img)+1);
+
+}
+
+INLINE
+value[+] transpose( value[+] img)
+
+{
+
+	a_transposed = with {
+
+		(. <= iv <= .): img[Array::reverse( iv)];
+
+		} : genarray( Array::reverse( shape( img)), default_el( img));
+
+	return a_transposed;
+
+}
+
+//von Neumann neighbourhood value recalculation (Local averaging)
+
+INLINE
+double[*] new_val_vn( int[2] x, value[+] img_padded)
+
+{
+
+	neighbours = points::neighb_vn( x);
+
+	values = with {
+
+		( [0] <= iv < [5]) : tod( img_padded[Array::sel( iv, neighbours)]);
+
+		} : fold( Array::+, 0.0);
+
+	return values Array::/ 5.0;
+
+}
+
+INLINE
+double[+] recalc_vn_double( value[+] img)
+
+{
+
+	img_padded = pad_nm( img,1,1);
+	sh = shape( img_padded);	
+
+	recalced_padded = with {
+		( . < iv < .) : new_val_vn( iv, img_padded);
+		} : genarray( sh, tod( default_el( img)));
+
+	sh_recalced = sh Array::- 2;
+
+	recalced = FUNCTION(tile_double_, value)( sh_recalced, [1,1], recalced_padded);
+
+	return recalced;
+
+}
+
+INLINE
+value[+] recalc_vn( value[+] img)
+{
+	return FUNCTION(to, value)( recalc_vn_double( img));
+}
+
+
+//Moore neighbourhood value recalculation (Local averaging)
+INLINE
+double[*] new_val_m( int[2] x, value[+] img_padded)
+
+{
+
+	neighbours = points::neighb_m( x);
+
+	values = with {
+
+		( [0] <= iv < [9]) : tod( img_padded[Array::sel( iv, neighbours)]);
+
+		} : fold( Array::+, 0.0);
+
+	return values Array::/ 9.0;
+
+}
+
+INLINE
+double[+] recalc_m_double( value[+] img)
+
+{
+
+	img_padded = pad_nm( img,1,1);
+	sh = shape( img_padded);	
+
+	recalced_padded = with {
+		( . < iv < .) : new_val_m( iv, img_padded);
+		} : genarray( sh, tod( default_el( img)));
+
+	sh_recalced = sh Array::- 2;
+
+	recalced = FUNCTION(tile_double_, value)( sh_recalced, [1,1], recalced_padded);
+
+	return recalced;
+
+}
+
+INLINE
+value[+] recalc_m( value[+] img)
+{
+	return FUNCTION(to, value)( recalc_m_double( img));
+}
+
+
+INLINE
+value[+] add_point( value[+] img, int[2] y) 
+
+{
+
+	return shift( y, 0, img);
+
+}
+
+INLINE
+value[+] pad_nm(value[+] mat, value[+] t)
+
+{
+
+	//mxn template, x->m, y->n centered at 0, for 2d convolution
+
+	n = ( Array::sel([0], shape(t)) Array::+ 1) Array::/ 2;
+
+	m = (  Array::sel([1], shape(t)) Array::+ 1) Array::/ 2;
+
+	return pad_nm( mat, n Array::- 1, m Array::- 1);	//indices go up to n-1,m-1 in 2d convolution 
+
+}
+
+INLINE
+value[+] pad_nm( value[+] mat, int n, int m)
+
+{
+
+	h = Array::sel([0], shape(mat));
+
+	w = Array::sel([1], shape(mat));
+
+
+
+	mat_padded_nm = with {
+
+		( . <= [i,j] < [n,m]):					mat[0,0];		//top left
+
+		( [h Array::+n,0] <= [i,j] < [h Array::+2 Array::*n,m]):		mat[h Array::-1,0];		//bottom left
+
+		( [0,w Array::+m] <= [i,j] < [n,w Array::+2 Array::*m]):		mat[0,w Array::-1];		//top right
+
+		( [h Array::+n,w Array::+m] <= [i,j] < [h Array::+2 Array::*n,w Array::+2 Array::*m]):	mat[h Array::-1,w Array::-1];	//bottom right
+
+
+
+		( [n,m] <= [i,j] < [h Array::+n,w Array::+m]):			mat[i Array::-n,j Array::-m];	//middle
+
+
+
+		( [0,m] <= [i,j] < [n,w Array::+m]):			mat[0,j Array::-m];		//top row
+
+		( [h Array::+n,m] <= [i,j] < [h Array::+2 Array::*n,w Array::+m]):		mat[h Array::-1,j Array::-m];	//bottom row
+
+		( [n,0] <= [i,j] < [h Array::+n,m]):			mat[i Array::-n,0];		//left column
+
+		( [n,w Array::+m] <= [i,j] < [h Array::+n,w Array::+2 Array::*m]):		mat[i Array::-n,w Array::-1];	//right column
+
+
+
+		} : genarray( shape(mat) Array::+[2 Array::*n,2 Array::*m], default_el( mat));
+
+	
+
+	return mat_padded_nm;
+
+}
+
+INLINE
+int[2] choice( value[+] img)
+
+{
+
+	srandom( sec( gettime()));
+
+	r0 = random( 0, Array::sel( [0], shape( img)));
+
+	r1 = random( 0, Array::sel( [1], shape( img)));
+
+	x=[r0,r1];
+
+	return x;
+
+}
+
+INLINE
+int card( value[+] img)
+
+{
+
+	return Array::sel([0], shape( img)) Array::* Array::sel([1], shape( img));
+
+}
+
+INLINE
+value pow( value a, value b)
+{
+	return pow_single( a, b);
+}
+
+INLINE
+value[+] pow( value[+] a, value[+] b)
+{
+#if 0
+	a_powed = (value[+])[default_el( a)-1, default_el( a)-1];
+	if( Array::any( shape( a) Array::!= shape( b)))
+	{
+		StdIO::printf( "Error: Same dimensions required for pow(image, image) \n");
+	}
+	else
+	{
+#endif
+		a_powed = with {
+			( . <= iv <= .): pow( a[iv], b[iv]);
+			} : genarray( shape( a), default_el( a));
+#if 0
+	}
+#endif
+
+	return a_powed;
+}
+
+INLINE
+value[+] pow( value[+] a, value b)
+{
+	a_powed = with {
+		( . <= iv <= .): pow( a[iv], b);
+		} : genarray( shape( a), default_el( a));
+
+	return a_powed;
+}
+
+INLINE
+value[+] pow( value[+] a, int k)
+{
+
+	a_powed = MathArray::pow( tod( a), Array::tod( k));
+
+	return (value[+]) Array::toi( a_powed);
+}
+
+INLINE
+value[+] pow( value[+] a, double k)
+{
+
+	a_powed = MathArray::pow( tod( a), k);
+
+	return (value[+]) Array::toi( a_powed);
+}
+
+INLINE
+value[+] sqrt( value[+] img)
+
+{
+
+	img_t = Array::tod( to_type(img));
+
+	img_sqrt = MathArray::sqrt( img_t);
+
+	return (value[+]) Array::toi( img_sqrt);
+
+}
+
+INLINE
+value[+] absolute( value[+] img)
+
+{
+
+	img_t = to_type( img);
+
+	lower = Array::max( img_t, 0);
+
+	return (value[+]) Array::min( lower, 255);
+
+}
+
+INLINE
+value[+] characteristics( value[+] img, int[*] greaterthan, int[*] lessthan)
+
+{
+
+	chared = with {
+
+		(. <= iv <= .): ( Array::all( img[iv]>greaterthan Array::& img[iv]<lessthan)) ? img[iv] : default_el( img);
+
+		} : genarray( shape( img), default_el( img));
+
+	return chared;
+
+}
+
+INLINE
+value[.,.] FUNCTION(read_, value)( String::string name)
+{
+	img = BMP::readBMP( name);
+	a = FUNCTION(to, value)( img);
+	
+	return a;
+}
+
+INLINE
+void write( value[.,.] img, String::string name)
+{
+	img_abs = absolute( img);
+	img_t = to_type( img_abs);
+	img_rgb = rgb::FUNCTION(prepare_write_from_, value)( img_t);
+
+	img_towrite = with {
+		( . <= iv <= .): (Color8::color) rgb::sel (iv, img_rgb);
+	} : genarray( shape( img), Color8::white());
+	
+	BMP::writeBMP( img_towrite, name);
+}

@@ -1,0 +1,70 @@
+use Color8: {newColor};
+use StdIO: all except {print};
+use image: all;
+use String: { string };
+
+int[3] get_int3( int[*] intstar)
+{
+	int3 = [ intstar[0], intstar[1], intstar[2] ];	
+	return (int[3])int3;
+}
+
+rgb[*] readJPEG( string name)
+{
+	img = JPEG::readJPEG( name);
+	return (rgb[*])img;
+}
+
+void writeJPEG( rgb[*] img_rgb, string name, int quality)
+{
+	img_rgb_t = to_type( img_rgb);
+	img = with {
+		( . <= iv <= .): newColor( get_int3( img_rgb_t[iv]));
+	} : genarray( shape(img_rgb), Color8::white());
+	JPEG::writeJPEG( img, name, quality);
+}
+
+int main()
+{
+	img = JPEG::readJPEG( "feed.jpeg");
+
+	img_rgb = (rgb[*])img;
+
+	//If I remove any of these print statements, I get a runtime error: 
+	// No appropriate instance of function "JPEG::writeJPEG :: FileSystem::FileSystem Terminal::Terminal Color8::color[*] String::string[*] int[*] -> FileSystem::FileSystem Terminal::Terminal " found!
+	//or
+	// No appropriate instance of function "Color8::newColor :: int[*] -> Color8::color " found!
+	//print( img);	
+	print( Color8::shape( img));
+
+	shp = Color8::shape( img);
+	//print( (int[*])img);
+	print( shape( (int[*])img));
+	shp1 = Array::drop( [Array::-1], Array::shape( (int[*])img));
+	print( shp1);
+
+	shp_rgb = shape( img_rgb);
+	//print( (int[*])img_rgb);
+	print( shape( (int[*])img_rgb));
+	shp1_rgb = Array::drop( [Array::-1], Array::shape( (int[*])img_rgb));
+	print( shp1_rgb);
+
+	print( shape( img_rgb));
+
+	img_rgb2 = transpose( img_rgb);
+//	img_rgb2 = pad_nm( img_rgb, 5, 10);
+	img_t = to_type( img_rgb2);
+
+	res = with {
+		( . <= iv <= .): newColor( get_int3( img_t[iv]));
+	} : genarray( shape(img_rgb2), Color8::white());
+
+	JPEG::writeJPEG( res, "transposed.jpeg", 100);
+//	JPEG::writeJPEG( res, "padded.jpeg", 100);
+
+	/*image = readJPEG("feed.jpeg");
+	padded = pad_nm( image, 5, 10);
+	writeJPEG( padded, "padded.jpeg", 100);*/
+
+	return 0;
+}

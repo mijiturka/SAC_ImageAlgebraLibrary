@@ -1,0 +1,174 @@
+#ifdef INLINE
+module points;
+#define INLINE inline
+
+#else
+module points_noinl;
+#define INLINE
+#endif
+
+use Array: {+, -, *, /, maxval, minval, sel, toi, tod, abs, sum};
+use MathArray: {pow, sqrt};
+
+export all;
+
+INLINE
+int sup( int[2] x)
+{
+	return maxval( x);
+}
+
+INLINE
+int max( int[2] x)
+{
+	return maxval( x) ;
+}
+
+INLINE
+int inf( int[2] x)
+{
+	return minval( x) ;
+}
+
+INLINE
+int min(int[2] x)
+{
+	return minval( x) ;
+}
+
+INLINE
+int[2] sup(int[2] x, int[2] y)
+{
+	return Array::min( x, y);
+}
+
+INLINE
+int[2] inf( int[2] x, int[2] y)
+{
+	return Array::max( x, y);
+}
+
+INLINE
+int[2] floor( double[2] x)
+{
+	return toi( MathArray::floor( x));
+}
+
+INLINE
+int[2] ceil( double[2] x)
+{
+	xc = with {
+		( . <= iv <= .): Math::ceil( x[iv]);
+	} : genarray( Array::shape( x), 0.0);
+	return toi( xc);
+}
+
+INLINE
+int[2] round( double[2] x)
+{
+	f = MathArray::floor( x);
+	c = [ Math::ceil( x[0]), Math::ceil( x[1])];
+	r0 = f[0];
+	r1 = f[1];
+	if ( (x[0] - f[0]) Array::< 0.5) { r0 = f[0]; }
+	else { r0 = c[0]; }
+	if ( (x[1] - f[1]) Array::< 0.5) { r1 = f[1]; }
+	else { r1 = c[1]; }
+	return toi( [ r0, r1]);
+}
+
+//should this be ++?
+INLINE
+int[4] ++( int[2] x, int[2] y)
+{
+	return [x[0], y[0], x[1], y[1]];
+}
+
+INLINE
+bool characteristics( int[2] x)
+{
+	chi = false;
+	if ( Array::all( x Array::>= [0,0])) { chi = true; }
+	return chi;
+}
+
+INLINE
+int dim( int[2] x)
+{
+	return Array::shape( x)[0];
+}
+
+INLINE
+int[2] hadamard_product( int[2] x, int[2] y)
+{
+	return x*y;
+}
+
+INLINE
+int[3] cross_product( int[3] x, int[3] y)
+{
+	return [ x[1]*y[2] - x[2]*y[1],  x[2]*y[0] - x[0]*y[2],  x[0]*y[1] - x[1]*y[0] ];
+}
+
+INLINE
+int dot_product( int[2] x, int[2] y)
+{
+	return sum( {i -> x[i]*y[i]} );
+}
+
+INLINE
+double euclidean_norm( int[2] x)
+{
+	return( sqrt( tod( sum( x*x))) );
+}
+
+INLINE
+double p_norm( int[2] x, int p)
+{
+	s = sum( pow( tod( abs(x)), tod( p)));
+	return pow( s, tod(1)/tod(p) );
+}
+
+INLINE
+int infinity_norm( int[2] x)
+{
+	return sup( abs( x));
+}
+
+INLINE
+double euclidean_distance( int[2] x, int[2] y)
+{
+	return euclidean_norm( x-y);
+}
+
+INLINE
+double cityblock_distance( int[2] x, int[2] y)
+{
+	return p_norm( x-y, 1);
+}
+
+INLINE
+int chessboard_distance( int[2] x, int[2] y)
+{
+	return infinity_norm( x-y);
+}
+
+
+//von Neumann neighbourhood
+INLINE
+int[5,2] neighb_vn( int[2] x)
+{
+	return [x, [x[0]-1,x[1]], [x[0]+1,x[1]], [x[0],x[1]-1], [x[0],x[1]+1] ];
+}
+
+//Moore neighbourhood
+INLINE
+int[9,2] neighb_m( int[2] x)
+{
+	//return neighb_vn( x) Array::++ [ [x[0]-1,x[1]-1], [x[0]+1,x[1]+1], [x[0]+1,x[1]-1], [x[0]-1,x[1]+1] ];
+	return [ [x[0]-1, x[1]+1],	[x[0], x[1]+1],	[x[0]+1, x[1]+1],
+		 [x[0]-1, x[1]],	[x[0], x[1]],	[x[0]+1, x[1]],	
+		 [x[0]-1, x[1]-1],	[x[0], x[1]-1],	[x[0]+1, x[1]-1] ];
+}
+
+

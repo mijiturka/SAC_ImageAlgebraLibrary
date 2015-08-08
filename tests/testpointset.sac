@@ -1,0 +1,102 @@
+use greyscale: all;
+use pointset: all;
+
+int main()
+{
+	mat = reshape([3,6],(greyscale[*])[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);
+	t = (greyscale[*])[ [1,0,-1],[2,0,-2],[1,2,1] ];
+	print( t);
+	print( get_ps( t));
+	
+	ps = get_ps( t, [1,1]);
+	ps1 = get_ps( t, [2,3]);
+
+	print( ps);
+	print( ps1);
+
+	print( origin( ps));
+	print( t);
+	print( ps_shape( ps));
+	print( ps_shape( ps1));
+	print( Array::genarray( ps_shape( ps), 0));
+	print( Array::genarray( ps_shape( ps1), 0));
+
+	print( get_image( ps, t));
+	print( get_image( ps1, t));
+
+	print( ps + ps1);
+	print( ps - ps1);
+	x = [2,2];
+	print( add_point( ps, x));
+	print( sub_point( ps1, x));
+
+	print( inf( ps));
+	print( sup( ps));
+	print( inf( ps1));
+	print( sup( ps1));
+
+	print( choice( ps));
+	print( choice( ps1));
+
+	print( get_image( ps, t));
+	print( card( ps));
+	print( get_image( ps1, t));
+	print( card( ps1));
+	ps3 = get_ps( mat, [3,4]);
+	print( get_image( ps3, mat));
+	print( card( ps3));
+
+	print( -ps);
+
+	print( mat);
+	print( get_ps( mat));
+	print( get_points( mat));
+
+	ps_mat = get_ps( mat, [1,2]);
+	print( ps_mat);
+	ps_t = get_ps( t, [1,1]);
+
+	print( union_ps( ps, ps1));
+	print( intersect_ps( ps, ps1));
+	print( difference_ps( ps, ps1));
+	print( union_ps( ps, ps1, ps_mat, mat));
+	print( intersect_ps( ps, ps1, ps_mat, mat));
+	print( difference_ps( ps, ps1, ps_mat, mat));
+	
+
+	ps2 = [ [2,3], [5,9] ];
+	ps3 = [ [1,4], [6,7] ];
+	print( union_ps( ps2, ps3));
+	print( intersect_ps( ps2, ps3));
+	print( difference_ps( ps2, ps3));
+	print( union_ps( ps2, ps3, ps_mat, mat));
+	print( intersect_ps( ps2, ps3, ps_mat, mat));
+	print( difference_ps( ps2, ps3, ps_mat, mat));
+	
+
+	ps4 = [ [2,1], [5,4] ];
+	ps5 = [ [3,2], [4,3] ];
+	print( union_ps( ps4, ps5)); 
+	print( intersect_ps( ps4, ps5));
+	print( difference_ps( ps4, ps5));
+	print( union_ps( ps4, ps5, ps_mat, mat)); //indexes into non-elements...
+	print( intersect_ps( ps4, ps5, ps_mat, mat));
+	print( difference_ps( ps4, ps5, ps_mat, mat));
+	
+
+	ps6 = [ [1,1], [3,4] ];
+	ps7 = [ [2,2], [3,6] ];
+	print( union_ps( ps6, ps7));
+	print( intersect_ps( ps6, ps7));
+	print( difference_ps( ps6, ps7));
+	print( union_ps( ps6, ps7, ps_mat, mat));
+	print( intersect_ps( ps6, ps7, ps_mat, mat));
+	print( difference_ps( ps6, ps7, ps_mat, mat));
+
+	print( cartesian_product( ps_mat, mat, ps, t));
+
+	print( domain_restriction( ps_mat, mat, ps));
+	print( domain_restriction( ps, t, ps1));
+
+	return 0;
+}

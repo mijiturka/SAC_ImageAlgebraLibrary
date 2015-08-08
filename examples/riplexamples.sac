@@ -1,0 +1,75 @@
+use ripl: all;
+//use ripl_noinl: all;
+
+use Benchmarking: all;
+
+greyscale[.,.] prewitt( greyscale[.,.] house)
+{
+	ps = (greyscale[+])[ [-1,-1,-1],[0,0,0],[1,1,1] ];
+	pt = (greyscale[+])[ [-1,0,1],[-1,0,1],[-1,0,1] ];
+			  
+	s_conv = convolution_2d( house, ps);
+	t_conv = convolution_2d( house, pt);
+
+	ag = pow( s_conv, 2);
+	bg = pow( t_conv, 2);
+	edge = sqrt( ag + bg);
+        return edge;
+}
+
+greyscale[.,.] objectDetection( greyscale[.,.] a, greyscale[.,.] b)
+{
+        c1 = convolution_2d( a, b);
+        c2 = convolution_2d( a, template( b));
+
+        c_d = tod( c1) / tod( c2);
+        c = togreyscale( c_d);
+
+        d = characteristics( c, 150, 255);
+
+        return( d);
+}
+
+int main()
+{
+        greyscale[196,348] rocket;
+        greyscale[1080,1920] house;
+        greyscale[178,314] a;
+        greyscale[34,37] b;
+        greyscale[33,37] b2;
+
+  i1 = getInterval( "Characteristics");
+  i2 = getInterval( "Prewitt");
+  i3 = getInterval( "Object Detection");
+	//Characteristics
+	rocket = read_greyscale("images/rocket.bmp");
+  start(i1);
+	rocket_characteristics = characteristics( rocket, 130, 255);
+  end(i1);
+	write( rocket_characteristics, "images/rocket_characteristics.bmp");
+
+
+
+	//Prewitt edge detection
+	house = read_greyscale("images/large.bmp");
+  start(i2);
+        edge = prewitt( house);
+   end(i2);
+	write( edge, "images/house_prewitt.bmp");
+	
+
+	//Object detection
+	a = read_greyscale("images/sattelite.bmp");
+	b = read_greyscale("images/sattelite_obj.bmp");
+        b2 = take( [33,37], b);
+	
+   start( i3);
+	d = objectDetection( a, b2);
+   end( i3);
+	
+	write( d, "images/sattelite_result.bmp");
+
+   printResult( i1, i2, i3);
+
+	return 0;
+}

@@ -1,0 +1,47 @@
+use valueset: all;
+use greyscale: all;
+
+#define value greyscale
+
+value[+] cartesian_onepoint( value[.] valset1, value[.] valset2, int pt_iv)
+{
+	cartesian = with {
+		(. <= iv <= .): [ valset1[iv[0]], valset2[pt_iv] ];
+	} : genarray( [card( valset1)], [ default_el( valset1), default_el( valset2)]);
+	return cartesian;
+}
+
+int c ( value[.] vs)
+{
+	return card( vs);
+}
+
+int main()
+{
+	vs  = (greyscale[*])[1,2,3,4,5,6,7,8,9,10,11,12,13,10,15,16,17,19];
+	vs2 = (greyscale[*])[1,2,6,4,5,6,7,8,14,10,11,12,13,14,15,16,15,18];
+
+	print( vs);
+	print( card( vs));
+	print( choice( vs));
+	
+	print( sup(vs));
+	print( inf(vs));
+	print( sup(vs, vs2));
+	print( inf(vs, vs2));
+
+	valset1 = vs;
+	valset2 = vs2;
+
+	card1 = card( valset1);
+	card2 = card( valset2);
+	default_el = genarray( [card1], [ default_el( valset1), default_el( valset2)]);
+	c = with {
+		( [0] <= iv < [card2]): cartesian_onepoint( valset1, valset2, iv[0]);
+	} : genarray( [card2], default_el);
+	print( c);
+	cartesian = reshape( [card1*card2,2], c);
+	print( cartesian);	
+
+	return 0;
+}

@@ -1,0 +1,157 @@
+use ripl: all;
+//use ripl_noinl: all;
+//for ripl_noinl: need to replace instances of rgb or greyscale with rgb::rgb and greyscale::greyscale.
+
+greyscale[3,3] neighb_vn_template( int[2] x, greyscale[.,.] img_padded)
+{
+	x = x + [1,1];
+
+	Ny = genarray( [3,3], default_el( img_padded));
+	Ny[0,1] = img_padded[x[0], x[1]+1];
+	Ny[1,0] = img_padded[x[0]-1, x[1]];
+	Ny[1,1] = img_padded[x[0], x[1]];
+	Ny[1,2] = img_padded[x[0]+1, x[1]];
+	Ny[2,1] = img_padded[x[0], x[1]-1];
+	
+	return Ny;
+}
+
+greyscale[3,3] neighb_m_template( int[2] x, greyscale[.,.] img_padded)
+{
+	x = x + [1,1];
+	Ny_pts = points::neighb_m( x);
+
+	Ny = with {
+		( . <= iv <= .): img_padded[Ny_pts[iv]];
+	} : genarray( [9], default_el( img_padded));
+
+	return reshape( [3,3], Ny);
+}
+
+greyscale[+] max_convolution2( greyscale[+] img, greyscale[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): max( img[iv] + t[iv]);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+greyscale[+] min_convolution2( greyscale[+] img, greyscale[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): min( img[iv] + t[iv]);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+int main()
+{
+
+	//Max-Min Sharpening Transform - page 81 - Incorrect
+	a = read_greyscale( "chars.bmp");
+	a_padded = pad_nm(a,1,1);
+
+	//von Neuman - How to represent N(3x3) with only 5 pts? Currently 0s
+	N = with {
+		( . <= iv <= .): neighb_vn_template( iv, a_padded);
+	} : genarray( shape( a), default_el( a, [3,3]));
+
+	aM = max_convolution2( a, N);
+	am = min_convolution2( a, N);
+	b = aM + am - 2*a;
+	s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 256)*am;
+	write( s, "chars_vn_resultabs.bmp");
+
+	for( i=0; i<128; i = i+1)
+	{		
+		b = aM + am - 2*s;
+		s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 256)*am;
+	}
+	write( s, "chars_vn_result128abs.bmp");
+
+	//Somewhat closer but not really
+	write( absolute( s), "chars_vn_resultabs.bmp");
+
+	for( i=0; i<128; i = i+1)
+	{		
+		b = aM + am - 2*absolute( s);
+		s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 256)*am;
+	}
+	write( absolute( s), "chars_vn_result128abs1.bmp");
+
+
+	//Moore
+	N = with {
+		( . <= iv <= .): neighb_m_template( iv, a_padded);
+	} : genarray( shape( a), default_el( a, [3,3]));
+	
+	aM = max_convolution2( a, N);
+	am = min_convolution2( a, N);
+	b = aM + am - 2*a;
+	s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 255)*am;
+	write( s, "chars_result.bmp");
+
+	for( i=0; i<128; i = i+1)
+	{		
+		b = aM + am - 2*s;
+		s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 255)*am;
+	}
+	write( s, "characters_result128.bmp");
+
+
+
+
+
+	//page 109 - Incorrect
+	a = read_greyscale( "cycle.bmp");
+	r = (greyscale[.])[1, -1];
+	s = (greyscale[.])[-1, 2, -1];
+
+	h_diff = absolute( linear_convolution(a, r));
+	write(h_diff, "h_diff.bmp");
+	h_diff2 = absolute( linear_convolution(a, s));
+	write(h_diff2, "h_diff2.bmp");
+
+
+
+
+	//page 112
+	//Prewitt
+	cycle = read_greyscale("images/cycle.bmp");
+	ps = (greyscale[+])[ [-1,-1,-1],[0,0,0],[1,1,1] ];
+	pt = (greyscale[+])[ [-1,0,1],[-1,0,1],[-1,0,1] ];
+			  
+	s_conv = convolution_2d( cycle, ps);
+	t_conv = convolution_2d( cycle, pt);
+
+	ag = pow( s_conv, 2);
+	bg = pow( t_conv, 2);
+	edge = sqrt( ag + bg);
+	write( edge, "images/cycle_prewitt.bmp");
+
+	//Sobel
+	ps = (greyscale[+])[ [-1,-2,-1],[0,0,0],[1,2,1] ];
+	pt = (greyscale[+])[ [-1,0,1],[-2,0,2],[-1,0,1] ];
+			  
+	s_conv = convolution_2d( cycle, ps);
+	t_conv = convolution_2d( cycle, pt);
+
+	ag = pow( s_conv, 2);
+	bg = pow( t_conv, 2);
+	edge = sqrt( ag + bg);
+	write( edge, "images/cycle_sobel.bmp");
+
+	return 0;
+}

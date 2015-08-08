@@ -1,0 +1,145 @@
+use ripl: all;
+//use ripl_noinl: all;
+//for ripl_noinl: need to replace instances of rgb or greyscale with rgb::rgb and greyscale::greyscale.
+
+int main()
+{
+	//img = (rgb[126,126])read_rgb("feed.bmp");
+	img = (rgb[333,800])read_rgb("rgb.bmp");
+	//img_g = (greyscale[360,500])read_greyscale("greyscale.bmp");
+	img_g = (greyscale[196,348])read_greyscale("rocket.bmp");
+	
+
+	//for ripl_noinl:
+/*	//img = (rgb::rgb[126,126])read_rgb("feed.bmp");
+	img = (rgb::rgb[333,800])read_rgb("rgb.bmp");
+	//img_g = (greyscale::greyscale[360,500])read_greyscale("greyscale.bmp");
+	img_g = (greyscale::greyscale[196,348])read_greyscale("rocket.bmp");*/
+	
+	img_pad_nm = pad_nm( img, 5, 10);
+	write( img_pad_nm, "pad_nm.bmp");
+	
+	img_g_pad_nm = pad_nm( img_g, 25, 50);
+	write( img_g_pad_nm, "pad_nm_g.bmp");
+
+
+	//image.sac functions
+	tRGB = (rgb[+])[ [[-1,-1,-1],[0,0,0],[1,1,1]],
+			 [[-1,-1,-1],[0,0,0],[1,1,1]],
+			 [[-1,-1,-1],[0,0,0],[1,1,1]] ];
+	t = (greyscale[+])[ [-1,-1,-1],[0,0,0],[1,1,1] ];
+
+	t2RGB = (rgb[+])[ [[1,1,1],[0,0,0],[-1,-1,-1]],
+			  [[2,2,2],[0,0,0],[-2,-2,-2]],
+			  [[1,1,1],[2,2,2],[1,1,1]] ];
+	t2 = (greyscale[+])[[1,0,-1],[2,0,-2],[1,2,1]];
+
+	img_linear_convolution = linear_convolution( img, t2RGB);
+	write( img_linear_convolution, "linear_convolution.bmp");
+
+	img_g_linear_convolution = linear_convolution( img_g, t2);
+	write( img_g_linear_convolution, "linear_convolution_g.bmp");
+
+
+	img_max_convolution = max_convolution( img, tRGB);
+	write( img_max_convolution, "max_convolution.bmp");
+	
+	img_g_max_convolution = max_convolution( img_g, t);
+	write( img_g_max_convolution, "max_convolution_g.bmp");
+
+
+	img_min_convolution = min_convolution( img, tRGB);
+	write( img_min_convolution, "min_convolution.bmp");
+	
+	img_g_min_convolution = min_convolution( img_g, t);
+	write( img_g_min_convolution, "min_convolution_g.bmp");
+
+
+
+	//Prewitt	
+	psRGB = (rgb[+])[ [[-1, 0, 1], [0, 0, 0], [-1, 0, 1]],
+			  [[-1, 0, 1], [0, 0, 0], [-1, 0, 1]],
+			  [[-1, 0, 1], [0, 0, 0], [-1, 0, 1]] ] ;
+	ptRGB = (rgb[+])[ [[-1,-1,-1],[0,0,0],[1,1,1]],
+			  [[-1,-1,-1],[0,0,0],[1,1,1]],
+			  [[-1,-1,-1],[0,0,0],[1,1,1]] ];
+	ps = (greyscale[+])[ [-1,-1,-1],[0,0,0],[1,1,1] ];
+	pt = (greyscale[+])[ [-1,0,1],[-1,0,1],[-1,0,1] ];
+			  
+	img_s_convolution_2d = convolution_2d( img, psRGB);
+	img_t_convolution_2d = convolution_2d( img, ptRGB);
+	write( img_s_convolution_2d, "convolution_2d_s.bmp");
+	write( img_t_convolution_2d, "convolution_2d_t.bmp");
+
+	a = pow( img_s_convolution_2d, 2);
+	b = pow( img_t_convolution_2d, 2);
+	edge = sqrt(a + b);
+	write( edge, "prewitt.bmp");
+	
+	
+	img_g_s_convolution_2d = convolution_2d( img_g, ps);
+	img_g_t_convolution_2d = convolution_2d( img_g, pt);
+	write( img_g_s_convolution_2d, "convolution_2d_s.bmp");
+	write( img_g_t_convolution_2d, "convolution_2d_t.bmp");
+
+	a_g = pow( img_g_s_convolution_2d, 2);
+	b_g = pow( img_g_t_convolution_2d, 2);
+	edge_g = sqrt(a_g + b_g);
+	write( edge_g, "prewitt_g.bmp");
+
+
+
+	img_pow = pow( img, 2);
+	write( img_pow, "pow.bmp");
+
+	img_g_pow = pow( img_g, 2);
+	write( img_g_pow, "pow_g.bmp");
+
+
+	img_template = template( img);
+	write( img_template, "template.bmp");
+	
+	img_g_template = template( img_g);
+	write( img_g_template, "template_g.bmp");
+	
+
+	img_transpose = transpose( img);
+	write( img_transpose, "transpose.bmp");
+
+	img_g_transpose = transpose( img_g);
+	write( img_g_transpose, "transpose_g.bmp");
+
+
+
+	//Voronoi/Moore neighbourhood value recalculation
+	img_recalc_vn = recalc_vn( img);
+	write( img_recalc_vn, "recalc_vn.bmp");	
+	
+	img_g_recalc_vn = recalc_vn( img_g);
+	write( img_g_recalc_vn, "recalc_vn_g.bmp");	
+
+
+	img_recalc_m = recalc_m( img);
+	write( img_recalc_m, "recalc_m.bmp");
+
+	img_g_recalc_m = recalc_m( img_g);
+	write( img_g_recalc_m, "recalc_m_g.bmp");
+
+
+	
+	img_add_point = add_point( img, [35,5]);
+	write( img_add_point, "add_point.bmp");
+	
+	img_g_add_point = add_point( img_g, [10,20]);
+	write( img_g_add_point, "add_point_g.bmp");
+	
+
+	img_characteristics = characteristics( img, [50, 50, 50], [200, 200, 200]);
+	write( img_characteristics, "characteristics.bmp");
+
+	img_g_characteristics = characteristics( img_g, 50, 200);
+	write( img_g_characteristics, "characteristics_g.bmp");
+
+
+	return 0;
+}

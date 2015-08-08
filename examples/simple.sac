@@ -1,0 +1,9 @@
+use ripl: all;
+
+int main()
+{
+a = read_rgb( "images/flower.bmp");
+write( transpose( a), "images/flower_transposed.bmp");
+write( recalc_m( a), "images/flower_blur.bmp");
+return 0;
+}

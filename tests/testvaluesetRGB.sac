@@ -1,0 +1,18 @@
+use valueset: all;
+use rgb: all;
+
+int main()
+{
+	vs  = (rgb[*])[ [1,0,1],[0,1,0],[-1,0,-1],[2,1,3],[4,0,1],[-2,-2,-1],[1,1,0],[2,2,2],[1,0,1] ];
+	vs2 = (rgb[*])[ [1,0,6],[-1,2,3],[-1,0,-1],[2,4,5],[0,0,1],[-2,0,-2],[1,1,0],[2,5,2],[1,1,1] ];
+	
+	print( vs);
+	print( card( vs));
+	print( choice( vs));
+	
+	print( sup(vs));
+	print( inf(vs));
+	print( sup(vs, vs2));
+	print( inf(vs, vs2));
+	return 0;
+}

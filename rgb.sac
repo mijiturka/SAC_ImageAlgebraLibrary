@@ -1,0 +1,573 @@
+#define sac_t int
+
+#ifdef INLINE
+module rgb;
+
+typedef sac_t[3] rgb;
+#define INLINE inline
+
+#else
+module rgb_noinl;
+
+use rgb: {rgb};
+
+#define INLINE
+#endif
+
+export all;
+
+
+INLINE
+rgb[*] -( rgb[*] a)
+{
+	return (rgb[*])(Array::- (sac_t[*])a);
+}
+
+INLINE
+rgb[*] +( rgb[*] a, rgb[*] b)
+{
+	return (rgb[*])((sac_t[*])a Array::+ (sac_t[*])b);
+}
+
+INLINE
+rgb[+] +( rgb[+] a, rgb b)
+{
+	s = with {
+		( . <= iv <= .)	: a[iv]+b;
+	} : genarray( shape( a), default_el( a));
+	return s;
+}
+
+INLINE
+rgb[+] +( rgb a, rgb[+] b)
+{
+
+	return b + a;
+}
+
+INLINE
+rgb[*] +( rgb[*] a, sac_t[*] b)
+{
+
+	return (rgb[*])((sac_t[*])a Array::+ b);
+}
+
+INLINE
+rgb[*] +( sac_t[*] a, rgb[*] b)
+{
+	return b + a;
+}
+
+INLINE
+rgb[*] -( rgb[*] a, rgb[*] b)
+{
+	return (rgb[*])((sac_t[*])a Array::- (sac_t[*])b);
+}
+
+INLINE
+rgb[+] -( rgb[+] a, rgb b)
+{
+	s = with {
+		( . <= iv <= .)	: a[iv]-b;
+	} : genarray( shape( a), default_el( a));
+	return s;
+}
+
+INLINE
+rgb[*] -( rgb[*] a, sac_t[*] b)
+{
+	return (rgb[*])((sac_t[*])a Array::- b);
+}
+
+INLINE
+rgb[*] *( rgb[*] a, rgb[*] b)
+{
+	return (rgb[*])((sac_t[*])a Array::* (sac_t[*])b);
+}
+
+INLINE
+rgb[+] *( rgb[+] a, rgb b)
+{
+	s = with {
+		( . <= iv <= .)	: a[iv]*b;
+	} : genarray( shape( a), default_el( a));
+	return s;
+}
+
+INLINE
+rgb[+] *( rgb a, rgb[+] b)
+{
+	return b * a;
+}
+
+INLINE
+rgb[*] *( rgb[*] a, sac_t[*] b)
+{
+	return (rgb[*])((sac_t[*])a Array::* b);
+}
+
+INLINE
+rgb[*] *( sac_t[*] a, rgb[*] b)
+
+{
+
+	return b * a;
+
+}
+
+
+INLINE
+rgb[*] /( rgb[*] a, rgb[*] b)
+
+{
+
+	return (rgb[*])((sac_t[*])a Array::/ (sac_t[*])b);
+
+}
+
+
+INLINE
+rgb[*] /( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (rgb[*])((sac_t[*])a Array::/ b);
+
+}
+
+
+INLINE
+bool[*] ==( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::== (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] ==( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::== b;
+
+}
+
+
+INLINE
+bool[*] !=( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::!= (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] !=( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::!= b;
+
+}
+
+
+INLINE
+bool[*] <( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::< (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] <( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::< b;
+
+}
+
+
+INLINE
+bool[*] <=( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::<= (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] <=( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::<= b;
+
+}
+
+
+INLINE
+bool[*] >( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::> (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] >( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::> b;
+
+}
+
+
+INLINE
+bool[*] >=( rgb[*] a, rgb[*] b)
+
+{
+
+	return (sac_t[*])a Array::>= (sac_t[*])b;
+
+}
+
+
+INLINE
+bool[*] >=( rgb[*] a, sac_t[*] b)
+
+{
+
+	return (sac_t[*])a Array::>= b;
+
+}
+
+
+//This works but doesn't print correctly
+INLINE
+rgb[*] ++( rgb[*] a, rgb[*]b)
+{
+	if ( Array::sel([1], shape( a)) Array::> Array::sel([1], shape( b)))  {
+          a1 = take( [ Array::sel( [0], shape( a)), Array::sel( [1], shape( b)) ], a);
+        } else { a1 = a; }
+	result = (sac_t[*])a1 Array::++ (sac_t[*])b;
+	return (rgb[*])result;
+}
+
+//This prints correctly
+/*int[*] ++( rgb[*] a, rgb[*]b)
+{
+	if ( shape( a)[1] Array::> shape( b)[1])  { a1 = take( [ shape( a)[0], shape( b)[1] ], a); }
+	else { a1 = a; }
+	return (sac_t[*])a1 Array::++ (sac_t[*])b;
+}*/
+
+INLINE
+rgb pow_single( rgb x, rgb y)
+{
+	r = Math::pow( Array::tod( r( x)), Array::tod( r( y)));
+	g = Math::pow( Array::tod( g( x)), Array::tod( g( y)));
+	b = Math::pow( Array::tod( b( x)), Array::tod( b( y)));
+
+	return (rgb)Array::toi( [r, g, b]);
+}
+
+INLINE
+rgb default_el( rgb[*] a)
+
+{
+
+	return (rgb)[0,0,0];
+
+}
+
+
+INLINE
+sac_t[*] to_type( rgb[*] a)
+
+{
+
+	return (sac_t[*])a;
+
+}
+
+INLINE
+sac_t[.,.] to_type_for_Color( rgb[*] a)
+
+{
+
+	return (sac_t[.,.])a;
+
+}
+
+INLINE
+sac_t r( rgb a)
+{
+	a_t = (sac_t[3])a;
+	return Array::sel([0], a_t);
+}
+
+INLINE
+sac_t g( rgb a)
+{
+	a_t = (sac_t[3])a;
+	return Array::sel( [1], a_t);
+}
+
+INLINE
+sac_t b( rgb a)
+{
+	a_t = (sac_t[3])a;
+	return Array::sel( [2], a_t);
+}
+
+INLINE
+rgb[*] torgb( double[*] a)
+
+{
+
+	return (rgb[*])Array::toi( a);
+
+}
+
+INLINE
+rgb[.,.] torgb( Color8::color[.,.] img)
+{
+	return (rgb[.,.])img;
+}
+
+INLINE
+rgb[*] to_multichannel( int[*] a)
+{
+	res = with {
+		( . <= iv <= .): (rgb)[Array::sel(iv, a), Array::sel(iv, a), Array::sel(iv, a)];
+		} : genarray( Array::shape( a), default_el( (rgb)[0,0,0]));
+	return res;
+}
+
+INLINE
+rgb[*] prepare_template_rgb( int[*] t)
+{
+	return to_multichannel( t);
+}
+
+INLINE
+rgb[*] prepare_write_from_greyscale( int[*] t)
+{
+	return to_multichannel( t);
+}
+
+INLINE
+rgb[*] prepare_write_from_rgb( int[*] t)
+{
+	return (rgb[.,.])( t);
+}
+
+INLINE
+double[*] tod( rgb[*] a)
+
+{
+
+	return Array::tod( (sac_t[*])a);
+
+}
+
+
+INLINE
+rgb min( rgb[*] valset)
+
+{
+
+        res = with {
+                (Array::*( 0, shape(valset)) <= iv < shape(valset)) : valset[iv];
+              } : fold( min, (rgb)[Array::maxint(), Array::maxint(), Array::maxint()]);
+	return res;
+
+}
+
+INLINE
+rgb[*] min( rgb[*] a, rgb[*] b)
+
+{
+
+	a_t = (sac_t[*])a;
+
+	b_t = (sac_t[*])b;
+
+	return (rgb[*]) Array::min( a_t, b_t);
+
+}
+
+
+INLINE
+rgb max( rgb[*] valset)
+
+{
+
+	return (rgb)with {
+                      (Array::*( 0, shape(valset)) <= iv < shape(valset)) : valset[iv];
+                    } : fold( max, (rgb)[Array::minint(), Array::minint(), Array::minint()]);
+
+}
+
+INLINE
+rgb[*] max( rgb[*] a, rgb[*] b)
+
+{
+
+	a_t = (sac_t[*])a;
+
+	b_t = (sac_t[*])b;
+
+	return (rgb[*]) Array::max( a_t, b_t);
+
+}
+
+
+INLINE
+rgb sum( rgb[*] valset)
+
+{
+   return (rgb)with {
+                 (Array::*( 0, shape(valset)) <= iv < shape(valset)) : valset[iv];
+               } : fold( +, (rgb)[0,0,0]);
+}
+
+
+INLINE
+int dim( rgb[*] a)
+
+{
+
+   return Array::dim( (sac_t[*]) a) Array::- 1;
+
+}
+
+
+INLINE
+INLINE int[.] shape( rgb[*] a)
+
+{
+
+   return Array::drop( [Array::-1], Array::shape( (sac_t[*])a));
+
+}
+
+
+
+INLINE
+rgb[*] sel( int[.] iv, rgb[*] a)
+
+{
+
+  return (rgb[*])Array::sel( iv, (sac_t[*])a);
+
+}
+
+
+INLINE
+rgb[*] sel( int iv, rgb[*] a)
+
+{ 
+
+	return (rgb[*])Array::sel( iv, (sac_t[*])a);
+
+}
+
+
+
+INLINE
+rgb[*] reshape( int[.] shp, rgb[*] a)
+
+{
+
+   return (rgb[*])Array::reshape( Array::++( shp, [ 3 ]), (sac_t[*]) a);
+
+}
+
+
+INLINE
+rgb[*] genarray( int[.] shp, rgb[*] val)
+
+{
+
+	return (rgb[*])Array::genarray( shp, (sac_t[*]) val);
+
+}
+
+
+INLINE
+rgb[*] modarray( rgb[*] array, int[.] v, rgb val)
+
+{
+
+	return (rgb[*])Array::modarray( (sac_t[*])array, v, (sac_t[3])val);
+
+}
+
+
+INLINE
+rgb[*] modarray( rgb[*] array, int v, rgb[*] val)
+
+{
+
+	return (rgb[*])Array::modarray( (sac_t[*])array, v, (sac_t[*])val);
+
+}
+
+INLINE
+rgb[*] take( int[.] shp, rgb[*] array)
+{
+	return (rgb[*])Array::take( shp, (sac_t[*])array);
+}
+
+INLINE
+rgb[*] tile( int[.] shp, int[.] idx, rgb[*] array)
+
+{
+
+	return (rgb[*])Array::tile( shp Array::++ [3], idx Array::++ [0], (int[*])array);
+
+}
+
+//This is here so that recalc_vn_double/recalc_m_double can have the same code for greyscale and rgb.
+INLINE
+double[*] tile_double_rgb( int[.] shp, int[.] idx, double[*] array)
+
+{
+
+	return Array::tile( shp Array::++ [3], idx Array::++ [0], array);
+
+}
+
+INLINE
+rgb[+] shift( int[.] counts, int boundary, rgb[+] A)
+
+{
+
+	return (rgb[+])Array::shift( counts, boundary, (sac_t[+])A);
+
+}
+
+
+INLINE
+void print(rgb[*] a)
+
+{
+
+	StdIO::print( (sac_t[*]) a);
+
+}

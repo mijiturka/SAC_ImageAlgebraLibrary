@@ -1,0 +1,209 @@
+use ripl: all;
+//use ripl_noinl: all;
+//for ripl_noinl: need to replace instances of rgb or greyscale with rgb::rgb and greyscale::greyscale.
+
+int main()
+{
+
+//Greyscale
+cg = (greyscale)1;
+bg = default_el(cg);
+
+mat = (greyscale[3,6])reshape([3,6],[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);
+mat1 = mat*30;
+mat1[0] = -mat1[1];
+mat1[0,0] = -mat1[0,0];
+t = (greyscale[*])[[1,0,-1],[2,0,-2],[1,2,1]];
+s = (greyscale[*])[[-4,0,5],[2,2,-3],[1,5,0]];
+
+
+print( mat);
+
+
+print( min( mat));
+print( max( t, s));
+print( min( t, s));
+print( max( t, s));
+print( min( t));
+
+
+print( cg);
+print( bg);
+print( cg + bg);
+print( t + s);
+print( t - s);
+print( t * s);
+print( t + (greyscale)2);
+print( t - (greyscale)2);
+print( t * (greyscale)2);
+print( (greyscale)2 + t);
+print( (greyscale)2 * t);
+print( t + 2);
+print( t - 2);
+print( t * 2);
+print( 2 + t);
+print( 2 * t);
+
+
+print( t ++ s);
+print( mat ++ t);
+print( t ++ mat);
+
+
+print( add_point( mat, [0,0]));
+print( add_point( mat, [1,2]));
+
+
+print( linear_convolution( mat, t));
+print( max_convolution( mat, t));
+print( min_convolution( mat, t));
+print( convolution_2d( mat, t));
+ti = [[1,0,-1],[2,0,-2],[1,2,1]];
+print( convolution_2d( mat, ti));
+
+
+print( pad_nm( mat, 1, 1));
+print( pad_nm( mat, 2, 3));
+print( pad_nm( mat, 3, 4));
+print( pad_nm( mat, 5, 2));
+print( pad_nm( mat, 1, 10));
+print( pad_nm( mat, t));
+
+
+StdIO::print( choice( mat));
+StdIO::print( card( mat));
+
+
+print( pow( mat, 2));
+print( pow( mat, 2d));
+print( pow( mat, mat));
+print( pow( t, s));
+
+
+print( template( mat1));
+print( absolute( mat1));
+print( transpose( mat1));
+print( characteristics( mat, 3, 12));
+
+
+StdIO::print( recalc_vn_double( mat));
+print( recalc_vn( mat));
+StdIO::print( recalc_m_double( mat));
+print( recalc_m( mat));
+
+
+
+//RGB
+a = (rgb)[1,2,3];
+b = (rgb)[4,5,6];
+c = (rgb)[7,8,9];
+d = (rgb)[-7,-8,-9];
+matRGB = (rgb[3,6])reshape( [3,6,3], 
+	 	[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
+		10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,
+		100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800]);
+
+tRGB =(rgb[+])[ [[1,0,1],[0,1,0],[-1,0,-1]],
+		[[2,1,2],[0,0,1],[-2,-2,-1]],
+		[[1,1,0],[2,2,2],[1,1,1]] ];
+sRGB =(rgb[+])[ [[0,2,-1],[0,3,4],[-1,0,-1]],
+		[[2,1,6],[-2,0,1],[-2,-2,-1]],
+		[[3,-1,0],[2,5,2],[-1,1,1]] ];
+
+
+print( matRGB);
+print( tRGB);
+
+
+print( min( tRGB));
+print( min( tRGB, sRGB));
+print( max( tRGB, sRGB));
+print( min( tRGB, sRGB));
+print( max( tRGB, sRGB));
+print( min( tRGB));
+
+
+print( a+b);
+print( a-b);
+print( a*b);
+print( a/b);
+print( tRGB+sRGB);
+print( matRGB+tRGB);
+print( tRGB-sRGB);
+print( tRGB*sRGB);
+print( tRGB + (rgb)[1,2,3]);
+print( (rgb)[1,2,3] + tRGB);
+print( tRGB - (rgb)[1,2,3]);
+print( tRGB * (rgb)[1,2,3]);
+print( (rgb)[1,2,3] * tRGB);
+print( tRGB + 1);
+print( tRGB - 1);
+print( tRGB * 1);
+print( 1 + tRGB); 
+print( 1 * tRGB);
+
+
+print( tRGB ++ sRGB);
+print( matRGB ++ sRGB);
+print( sRGB ++ matRGB);
+stRGB = sRGB ++ tRGB;
+print( sRGB ++ stRGB);
+
+
+print( add_point( matRGB, [0,0]));
+print( add_point( matRGB, [1,2]));
+
+
+print( sum( matRGB));
+print( sum( tRGB));
+m = reshape( [2,2,3], [1,2,3, 1,2,3, 1,2,3, 1,2,3]);
+n = (rgb[+])[ [[1,2,3], [1,2,3]], [[1,2,3], [1,2,3]] ];
+StdIO::print( sum( m));
+print( sum( n));
+
+
+print( linear_convolution( matRGB, tRGB));
+print( max_convolution( matRGB, tRGB));
+print( min_convolution( matRGB, tRGB));
+tg = [[1,0,-1],[2,0,-2],[1,2,1]];
+print( convolution_2d( matRGB, tg));
+print( convolution_2d( matRGB, tRGB));
+
+
+print( pad_nm( matRGB, 1, 1));
+print( pad_nm( matRGB, 2, 3));
+print( pad_nm( matRGB, 3, 4));
+print( pad_nm( matRGB, 5, 2));
+print( pad_nm( matRGB, 1, 10));
+print( pad_nm( matRGB, tRGB));
+
+
+StdIO::print( choice( matRGB));
+StdIO::print( card( matRGB));
+
+
+print( pow( matRGB, 2));
+print( pow( matRGB, 2d));
+print( pow( matRGB, matRGB));
+print( pow( tRGB, sRGB));
+
+
+print( absolute( matRGB));
+print( template( matRGB));
+print( transpose( matRGB));
+print( characteristics( matRGB, [0,0,0], [150,160,170]));
+
+
+//when used with ripl_noinl, gives runtime error Can not assign double[*] SACp_flat_609 to double[3] SACp_asd_6953__flat_609 type mismatch 
+//StdIO::print( recalc_vn_double( matRGB));
+
+print( recalc_vn( matRGB));
+StdIO::print( recalc_m_double( matRGB));
+print( recalc_m( matRGB));
+
+print( matRGB);
+StdIO::print( shape( matRGB));
+
+
+return 0;
+}

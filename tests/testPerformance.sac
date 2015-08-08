@@ -1,0 +1,79 @@
+#ifdef LIBRARY
+use ripl_noinl: all;
+#else
+use ripl: all;
+#endif
+
+inline
+greyscale[3,3] neighb_vn_template( int[2] x, greyscale[.,.] img_padded)
+{
+	x = x + [1,1];
+
+	Ny = genarray( [3,3], default_el( img_padded));
+	Ny[0,1] = img_padded[x[0], x[1]+1];
+	Ny[1,0] = img_padded[x[0]-1, x[1]];
+	Ny[1,1] = img_padded[x[0], x[1]];
+	Ny[1,2] = img_padded[x[0]+1, x[1]];
+	Ny[2,1] = img_padded[x[0], x[1]-1];
+	
+	return Ny;
+}
+
+inline
+greyscale[+] max_convolution2( greyscale[+] img, greyscale[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): max( img[iv] + t[iv]);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+inline
+greyscale[+] min_convolution2( greyscale[+] img, greyscale[+] t)
+
+{
+
+	b = with {
+
+		(. <= iv <= .): min( img[iv] + t[iv]);
+
+		} : genarray( shape( img), default_el( img));
+
+	return b;
+
+}
+
+int main()
+{
+
+   greyscale[1080,1920] a;
+
+	//Max-Min Sharpening Transform: Image Algebra page 81
+	a =  read_greyscale( "large.bmp");
+	a_padded = pad_nm(a,1,1);
+
+	N = with {
+		( . <= iv <= .): neighb_vn_template( iv, a_padded);
+	} : genarray( shape( a), default_el( a, [3,3]));
+
+	aM = max_convolution2( a, N);
+	am = min_convolution2( a, N);
+	s = a;
+
+	for( i=0; i<128; i = i+1)
+	{		
+		b = aM + am - 2*s;
+		s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 256)*am;
+	}
+	write( s, "result.bmp");
+
+	return 0;
+
+}
+ 

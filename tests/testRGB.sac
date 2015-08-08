@@ -1,0 +1,98 @@
+use image: all;
+
+int main()
+{
+
+a = (rgb)[1,2,3];
+b = (rgb)[4,5,6];
+c = (rgb)[7,8,9];
+d = (rgb)[-7,-8,-9];
+
+matRGB = reshape( [3,6,3], 
+	 	[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,
+		10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,
+		100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600,1700,1800]);
+//matRGB[0] = -matRGB[0];
+
+print( matRGB);
+
+tRGB =(rgb[+])[ [[1,0,1],[0,1,0],[-1,0,-1]],
+		[[2,1,2],[0,0,1],[-2,-2,-1]],
+		[[1,1,0],[2,2,2],[1,1,1]] ];
+sRGB =(rgb[+])[ [[0,2,-1],[0,3,4],[-1,0,-1]],
+		[[2,1,6],[-2,0,1],[-2,-2,-1]],
+		[[3,-1,0],[2,5,2],[-1,1,1]] ];
+print( tRGB);
+
+print( min( tRGB));
+print( min( tRGB, sRGB));
+print( max( tRGB, sRGB));
+
+//Make this rgb[+] automatically?
+ab = [a, b];
+//print( sum( ab));
+
+/*print( a+b);
+print( a-b);
+print( a*b);
+print( a/b);
+print( tRGB+sRGB);
+print( matRGB+tRGB);
+print( tRGB-sRGB);
+print( tRGB*sRGB);
+print( tRGB + (rgb)[1,2,3]);
+print( (rgb)[1,2,3] + tRGB);
+print( tRGB - (rgb)[1,2,3]);
+print( tRGB * (rgb)[1,2,3]);
+print( (rgb)[1,2,3] * tRGB);
+print( tRGB + 1);
+print( tRGB - 1);
+print( tRGB * 1);
+print( 1 + tRGB); 
+print( 1 * tRGB);*/
+
+//print( tRGB ++ sRGB);
+//print( matRGB ++ sRGB);
+//print( sRGB ++ matRGB);
+//stRGB = sRGB ++ tRGB;
+//print( sRGB ++ stRGB);
+
+/*print( sum( matRGB));
+print( sum( tRGB));
+m = reshape( [2,2,3], [1,2,3, 1,2,3, 1,2,3, 1,2,3]);
+n = (rgb[+])[ [[1,2,3], [1,2,3]], [[1,2,3], [1,2,3]] ];
+print( sum( m));
+print( sum( n));*/
+
+//print( min( tRGB, sRGB));
+//print( max( tRGB, sRGB));
+//print( min( tRGB));
+//print( linear_convolution( matRGB, tRGB));
+//print( sum_template( (rgb)[1,1,1], tRGB));
+//print( max_convolution( matRGB, tRGB));
+//print( min_convolution( matRGB, tRGB));
+tg = [[1,0,-1],[2,0,-2],[1,2,1]];
+//print( convolution_2d( matRGB, tg));
+//print( convolution_2d( matRGB, tRGB));
+
+//print( choice( matRGB));
+//print( card( matRGB));
+
+//print( pow( matRGB, 2));
+//print( pow( matRGB, 2d));
+//print( pow( matRGB, matRGB));
+//StdIO::print( pow_double( tRGB, sRGB));
+//print( pow( tRGB, sRGB));
+
+//print( absolute( matRGB));
+//print( template( matRGB));
+//print( transpose( matRGB));
+//print( characteristics( matRGB, [0,0,0], [150,160,170]));
+
+//StdIO::print( recalc_vn_double( matRGB));
+//print( recalc_vn( matRGB));
+//StdIO::print( recalc_m_double( matRGB));
+//print( recalc_m( matRGB));
+
+return 0;
+}

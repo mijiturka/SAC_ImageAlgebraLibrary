@@ -1,0 +1,83 @@
+use image: all;
+
+int main()
+{
+//greyscale c = 1;
+c = (greyscale)1;
+b = default_el(c);
+
+mat = reshape([3,6],(greyscale[*])[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);
+mat1 = mat*30;
+mat1[0]=-mat1[1];
+mat1[0,0]=-mat1[0,0];
+t = (greyscale[*])[[1,0,-1],[2,0,-2],[1,2,1]];
+s = (greyscale[*])[[-4,0,5],[2,2,-3],[1,5,0]];
+
+print( mat);
+print( min( mat));
+
+/*print( c);
+print( b);
+print( c + b);
+print( t + s);
+print( t - s);
+print( t * s);
+print( t + (greyscale)2);
+print( t - (greyscale)2);
+print( t * (greyscale)2);
+print( (greyscale)2 + t);
+print( (greyscale)2 * t);
+print( t + 2);
+print( t - 2);
+print( t * 2);
+print( 2 + t);
+print( 2 * t);*/
+
+/*print( t ++ s);
+print( mat ++ t);
+print( t ++ mat);*/
+
+//print( point_addition( mat, [0,0]));
+//print( point_addition( mat, [1,2]));
+
+
+//print( min( t, s));
+//print( max( t, s));
+//print( min( t));
+
+//print( linear_convolution( mat, t));
+//print( max_convolution( mat, t));
+//print( min_convolution( mat, t));
+//print( convolution_2d( mat, t));
+ti = [[1,0,-1],[2,0,-2],[1,2,1]];
+//print( convolution_2d( mat, ti));
+
+/*print( mat);
+print( pad_nm( mat, 1, 1));
+print( pad_nm( mat, 2, 3));
+print( pad_nm( mat, 3, 4));
+print( pad_nm( mat, 5, 2));
+print( pad_nm( mat, 1, 10));
+print( pad_nm( mat, t));*/
+
+//print( choice( mat));
+//print( card( mat));
+
+//print( pow( mat, 2));
+//print( pow( mat, 2d));
+/*print( pow( mat, mat));
+StdIO::print( pow_double( t, s));
+print( pow( t, s));*/
+
+//print( template( mat1));
+//print( absolute( mat1));
+//print( transpose( mat1));
+//print( characteristics( mat, 3, 12));
+
+/*StdIO::print( recalc_vn_double( mat));
+print( recalc_vn( mat));
+StdIO::print( recalc_m_double( mat));
+print( recalc_m( mat));*/
+
+return 0;
+}

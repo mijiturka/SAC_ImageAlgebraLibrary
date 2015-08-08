@@ -1,0 +1,31 @@
+use image: all;
+//use image_noinl: all;
+
+int main()
+{
+	img = (greyscale[1920,1080])read_greyscale( "large.bmp");
+	pt = (greyscale[3,3])[ [-1,0,1],[-1,0,1],[-1,0,1] ];
+
+	aM = genarray( shape( img), (greyscale)0);
+	am = genarray( shape( img), (greyscale)255);
+	s = genarray( shape( img), (greyscale)123);
+
+	for ( i = 0; i < 50000; i = i+1)
+	{
+		img = characteristics( img, 10, 200);
+		img = linear_convolution( img, pt);		
+
+		b = aM + am - 2*s;
+		s = characteristics( b, -510, 1)*aM + characteristics( b, 0, 256)*am;
+
+		img = characteristics( img, 10+i, 200+i);
+		img1 = linear_convolution( img, pt);
+		img2 = characteristics( img1, 10+i, 200+i);
+		img3 = img1+img2;
+		img4 = img3+img;
+
+		img = recalc_vn( img);
+	}
+
+	return 0;
+}

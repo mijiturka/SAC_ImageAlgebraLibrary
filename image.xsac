@@ -1,0 +1,45 @@
+#ifdef GREYSCALE
+
+
+#ifdef INLINE
+module image_greyscale;
+#else
+module image_greyscale_noinl;
+#endif
+
+use greyscale: all;
+
+use Random: all;
+use Clock: {gettime, sec};
+
+export all;
+
+#define value greyscale
+#include "image.mac"
+#undef value
+
+
+
+#else ifdef RGB
+
+
+#ifdef INLINE
+module image_rgb;
+#else
+module image_rgb_noinl;
+#endif
+
+use rgb: all;
+
+use Random: all;
+use Clock: {gettime, sec};
+
+export all;
+
+#define value rgb
+#include "image.mac"
+#undef value
+
+
+
+#endif

@@ -1,0 +1,348 @@
+#define sac_t int
+
+#ifdef INLINE
+module greyscale;
+
+typedef sac_t greyscale;
+
+#define INLINE inline
+
+#else
+module greyscale_noinl;
+
+use greyscale: {greyscale};
+#define INLINE
+#endif
+
+export all;
+
+INLINE
+greyscale[*] -( greyscale[*] a)
+{
+	return (greyscale[*])(Array::- (sac_t[*])a);
+}
+
+INLINE
+greyscale[*] +( greyscale[*] a, greyscale[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::+ (sac_t[*])b);
+}
+
+INLINE
+greyscale[*] +( greyscale[*] a, sac_t[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::+ b);
+}
+
+INLINE
+greyscale[*] +( sac_t[*] a, greyscale[*] b)
+{
+	return b + a;
+}
+
+INLINE
+greyscale[*] -( greyscale[*] a, greyscale[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::- (sac_t[*])b);
+}
+
+INLINE
+greyscale[*] -( greyscale[*] a, sac_t[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::- b);
+}
+
+INLINE
+greyscale[*] *( sac_t[*] a, greyscale[*] b)
+{
+	return b * a;
+}
+
+INLINE
+greyscale[*] *( greyscale[*] a, greyscale[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::* (sac_t[*])b);
+}
+
+INLINE
+greyscale[*] *( greyscale[*] a, sac_t[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::* b);
+}
+
+INLINE
+greyscale[*] /( greyscale[*] a, greyscale[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::/ (sac_t[*])b);
+}
+
+INLINE
+greyscale[*] /( greyscale[*] a, sac_t[*] b)
+{
+	return (greyscale[*])((sac_t[*]) a Array::/ b);
+}
+
+INLINE
+bool[*] ==( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::== (sac_t[*])b;
+}
+
+INLINE
+bool[*] ==( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::== b;
+}
+
+INLINE
+bool[*] !=( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::!= (sac_t[*])b;
+}
+
+INLINE
+bool[*] !=( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::!= b;
+}
+
+INLINE
+bool[*] <( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::< (sac_t[*])b;
+}
+
+INLINE
+bool[*] <( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::< b;
+}
+
+INLINE
+bool[*] <=( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::<= (sac_t[*])b;
+}
+
+INLINE
+bool[*] <=( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::<= b;
+}
+
+INLINE
+bool[*] >( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::> (sac_t[*])b;
+}
+
+INLINE
+bool[*] >( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::> b;
+}
+
+INLINE
+bool[*] >=( greyscale[*] a, greyscale[*] b)
+{
+	return (sac_t[*]) a Array::>= (sac_t[*])b;
+}
+
+INLINE
+bool[*] >=( greyscale[*] a, sac_t[*] b)
+{
+	return (sac_t[*]) a Array::>= b;
+}
+
+INLINE
+greyscale[*] ++( greyscale[*] a, greyscale[*]b)
+{
+	if ( Array::sel([1], shape( a)) Array::> Array::sel( [1], shape( b)))  {
+           a1 = take( [ Array::sel( [0], shape( a)), Array::sel( [1], shape( b)) ], a);
+        } else { a1 = a; }
+	result = (sac_t[*])a1 Array::++ (sac_t[*])b;
+	return (greyscale[*])result;
+}
+
+INLINE
+greyscale pow_single( greyscale a, greyscale b)
+{
+	res = Math::pow( tod( a), tod( b));
+
+	return (greyscale)Array::toi( res);
+}
+
+INLINE
+greyscale default_el( greyscale[*] a)
+{
+  return (greyscale)0;
+}
+
+INLINE
+greyscale[+] default_el( greyscale[*] a, int[.] shp)
+{
+	return genarray( shp, (greyscale)0);
+}
+
+INLINE
+greyscale zero()
+{
+  return (greyscale)0;
+}
+
+INLINE
+sac_t[*] to_type( greyscale[*] a)
+{
+	return ( sac_t[*])a;
+}
+
+INLINE
+greyscale[*] togreyscale( double[*] a)
+{
+	return (greyscale[*])Array::toi( a);
+}
+
+INLINE
+greyscale[.,.] togreyscale( Color8::color[.,.] img)
+{
+	img_i = Color8::toi( img);
+	img_g = with {
+		( . <= iv <= .): (greyscale) Array::sel( [0], Array::sel( iv, img_i));
+	} : genarray( Color8::shape( img), default_el( (greyscale)0));
+	return img_g;
+}
+
+INLINE
+greyscale[*] prepare_template_greyscale( int[*] t)
+{
+	return (greyscale[*])t;
+}
+
+INLINE
+double[*] tod( greyscale[*] a)
+{
+	return Array::tod( (sac_t[*])a);
+}
+
+INLINE
+greyscale min( greyscale[*] a)
+{
+	a_t = (sac_t[*])a;
+	return (greyscale) Array::minval( a_t);
+}
+
+INLINE
+greyscale[*] min( greyscale[*] a, greyscale[*] b)
+{
+	a_t = (sac_t[*])a;
+	b_t = (sac_t[*])b;
+	return (greyscale[*]) Array::min( a_t, b_t);
+}
+
+INLINE
+greyscale max( greyscale[*] a)
+{
+	a_t = (sac_t[*])a;
+	return (greyscale) Array::maxval( a_t);
+}
+
+INLINE
+greyscale[*] max( greyscale[*] a, greyscale[*] b)
+{
+	a_t = (sac_t[*])a;
+	b_t = (sac_t[*])b;
+	return (greyscale[*]) Array::max( a_t, b_t);
+}
+
+INLINE
+greyscale sum( greyscale[*] a)
+{
+	a_t = (sac_t[*])a;
+	return (greyscale) Array::sum( a_t);
+}
+
+INLINE
+int dim( greyscale[*] a)
+{
+   return Array::dim( (sac_t[*])a);
+}
+
+INLINE
+int[.] shape( greyscale[*] a)
+{
+   return Array::shape( (sac_t[*])a);
+}
+
+INLINE
+greyscale[*] sel( int[.] iv, greyscale[*] a)
+{
+  //return (greyscale)Array::sel( iv, (sac_t[*])a);
+  //hope this doesn't cause problems
+  return (greyscale[*])Array::sel( iv, (sac_t[*])a);
+}
+
+INLINE
+greyscale[*] sel( int iv, greyscale[*] a)
+{
+	return (greyscale[*])Array::sel( iv, (sac_t[*])a);
+}
+
+INLINE
+greyscale[*] reshape( int[.] shp, greyscale[*] a)
+{
+   return (greyscale[*])Array::reshape( shp, (sac_t[*]) a);
+}
+
+INLINE
+greyscale[*] genarray( int[.] shp, greyscale[*] val)
+{
+	return (greyscale[*])Array::genarray( shp, (sac_t[*]) val);
+}
+
+INLINE
+greyscale[*] modarray( greyscale[*] array, int[.] v, greyscale val)
+{
+	return (greyscale[*])Array::modarray( (sac_t[*])array, v, (sac_t)val);
+}
+
+INLINE
+greyscale[*] modarray( greyscale[*] array, int v, greyscale[*] val)
+{
+	return (greyscale[*])Array::modarray( (sac_t[*])array, v, (sac_t[*])val);
+}
+
+INLINE
+greyscale[*] take( int[.] shp, greyscale[*] array)
+{
+	return (greyscale[*])Array::take( shp, (sac_t[*])array);
+}
+
+INLINE
+greyscale[*] tile( int[.] shp, int[.] idx, greyscale[*] array)
+{
+	return (greyscale[*])Array::tile( shp, idx, (sac_t[*])array);
+}
+
+//This is here so that recalc_vn_double/recalc_m_double can have the same code for greyscale and rgb.
+INLINE
+double[*] tile_double_greyscale( int[.] shp, int[.] idx, double[*] array)
+
+{
+
+	return Array::tile( shp, idx, array);
+
+}
+
+
+INLINE
+greyscale[+] shift( int[.] counts, int boundary, greyscale[+] A)
+{
+	return (greyscale[+])Array::shift( counts, boundary, (sac_t[+])A);
+}
+
+INLINE
+void print( greyscale[*] a)
+{
+	StdIO::print( (sac_t[*]) a);
+}
+

@@ -1,0 +1,63 @@
+//use points: all;
+use points_noinl: all;
+use StdIO: {print};
+
+int main()
+{
+
+x=[1,5];
+y=[3,4];
+print( x);
+print( y);
+xn = -x;
+print( xn);
+
+print( x+y);
+print( x-y);
+print( x*y);
+print( x/y);
+print( x + 1);
+print( x - 1);
+print( x * 1);
+print( 1 + x);
+print( 1 - x);
+print( 1 * x);
+
+print( sup( x));
+print( inf( x));
+print( max( x));
+print( min( x));
+print( sup( x, y));
+print( inf( x, y));
+print( max( x, y));
+print( min( x, y));
+
+print( floor( [1.4, 2.6]));
+print( ceil( [1.4, 2.6]));
+print( round( [1.4, 2.6]));
+
+print( x++y);
+
+print( characteristics( [1,5]));
+print( characteristics( [0,0]));
+print( characteristics( [-1,2]));
+print( characteristics( [5,-3]));
+
+print( dim( x));
+
+print( hadamard_product( x, y));
+print( dot_product( x, y));
+print( cross_product( [1,2,3], [4,5,6]));
+
+print( euclidean_norm( x));
+print( euclidean_distance( x, y));
+print( p_norm( x, 2));
+print( cityblock_distance (x, y));
+print( infinity_norm( x));
+print( chessboard_distance( x, y));
+
+print(neighb_vn(x));
+print(neighb_m(y));
+
+return 0;
+}

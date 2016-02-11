@@ -1,0 +1,728 @@
+THIS FILE CONTAINS
+1. SAC ARRAYS REFRESHER
+2. FUNCTION DESCRIPTIONS
+	2.1 Arithmetic
+	2.2 Boolean
+	2.3 Mathematical
+	2.4 Image operations
+	2.5 SAC Array operations
+	2.6 Default Elements, Selections, Type transformations
+	2.7 I/O
+3. A LIST OF JUST THE FUNCTIONS (NO DESCRIPTIONS)
+4. A LIST OF FUNCTIONS BY FILE
+
+
+
+1. SAC ARRAYS REFRESHER:
+
+[*] an array of 1 or more elements, of any dimension
+[+] an array of more than 1 element, of any dimension
+[.] an array with dimension 1
+[.,.] an array with dimension 2
+
+
+
+2. FUNCTION DESCRIPTIONS:
+
+2.1 Arithmetic:
+(also available for points as SAC operations)
+
+value[*] -( value[*] a)
+
+
+value[*] +( value[*] a, value[*] b)
+value[*] +( value[*] a, int[*] b)
+value[*] +( int[*] a, value[*] b)
+rgb[+] +( rgb[+] a, rgb b)
+rgb[+] +( rgb a, rgb[+] b)
+
+
+value[*] -( value[*] a, value[*] b)
+value[*] -( value[*] a, int[*] b)
+value[*] -( int[*] a, value[*] b)
+rgb[+] -( rgb[+] a, rgb b)
+
+
+value[*] *( int[*] a, value[*] b)
+value[*] *( value[*] a, value[*] b)
+value[*] *( value[*] a, int[*] b)
+rgb[+] *( rgb[+] a, rgb b)
+rgb[+] *( rgb a, rgb[+] b)
+
+
+value[*] /( value[*] a, value[*] b)
+value[*] /( value[*] a, int[*] b)
+value[*] /( int[*] a, value[*] b)
+rgb[+] /( rgb[+] a, rgb b)
+rgb[+] /( rgb a, rgb[+] b)
+
+
+value sum( value[*] a)
+
+
+value pow( value a, value b)
+a^b
+
+value[+] pow( value[+] a, value[+] b)
+Returns an image whose pixel values are each pixel of a to the power of the pixel at the same place in b. Same shape of a and b required.
+
+value[+] pow( value[+] a, value b)
+Returns an image whose pixel values are each pixel of a to the power of b.
+
+value[+] pow( value[+] a, int k)
+Returns an image whose pixel values are each pixel of a to the power of k.
+
+value[+] pow( value[+] a, double k)
+Returns an image whose pixel values are each pixel of a to the power of k.
+
+value[+] sqrt( value[+] img)
+
+
+
+2.2 Boolean:
+(also available for points as SAC operations)
+
+bool[*] ==( value[*] a, value[*] b)
+bool[*] ==( value[*] a, int[*] b)
+bool[*] ==( int[*] a, value[*] b)
+
+bool[*] !=( value[*] a, value[*] b)
+bool[*] !=( value[*] a, int[*] b)
+bool[*] !=( int[*] a, value[*] b)
+
+bool[*] <( value[*] a, value[*] b)
+bool[*] <( value[*] a, int[*] b)
+bool[*] <( int[*] a, value[*] b)
+
+bool[*] <=( value[*] a, value[*] b)
+bool[*] <=( value[*] a, int[*] b)
+bool[*] <=( int[*] a, value[*] b)
+
+bool[*] >( value[*] a, value[*] b)
+bool[*] >( value[*] a, int[*] b)
+bool[*] >( int[*] a, value[*] b)
+
+bool[*] >=( value[*] a, value[*] b)
+bool[*] >=( value[*] a, int[*] b)
+bool[*] >=( int[*] a, value[*] b)
+
+
+2.3 Mathematical:
+
+int max( int[2] x)
+Returns the larger of the two coordinates.
+
+value max( value[*] a)
+Returns the largest value in a.
+For rgb, returns an rgb value composed of the largest R, G and B values in a.
+
+value[*] max( value[*] a, value[*] b)
+Returns a value[*] where each element is the larger out of the elements of a and b at this index.
+For rgb, returns an rgb value composed of the larger R, G and B values of a and b at this index.
+The result has the smaller of the shapes of a and b.
+
+
+int min(int[2] x)
+Returns the smaller of the two coordinates.
+
+value min( value[*] a)
+Returns the smallest value in a.
+For rgb, returns an rgb value composed of the smallest R, G and B values in a.
+
+value[*] min( value[*] a, value[*] b)
+Returns a value[*] where each element is the smaller out of the elements of a and b at this index.
+For rgb, returns an rgb value composed of the smaller R, G and B values of a and b at this index.
+The result has the smaller of the shapes of a and b.
+
+
+
+int sup( int[2] x)
+Does the same as max.
+
+int[2] sup(int[2] x, int[2] y)
+Returns a point composed of the larger coordinates of x and y
+
+int inf( int[2] x)
+Does the same as min.
+
+int[2] inf( int[2] x, int[2] y)
+Returns a point composed of the smaller coordinates of x and y
+
+int[2] floor( double[2] x)
+int[2] ceil( double[2] x)
+
+int[2] round( double[2] x)
+Rounds down if the fraction part is less than 0.5, or up if it's more.
+
+
+int[2] choice( value[+] img)
+Returns a random point contained in img.
+
+int card( value[+] img)
+Returns the cardinality of img.
+
+int dimension( int[2] x) 
+For a 2d point, returns 2 (as described in Image Algebra, not SAC)
+
+
+int[4] ++( int[2] x, int[2] y)
+Concatenation of points. Available as a SAC function on int[2]
+
+value[+] ++( value[+] a, value[+]b)
+Concatenation. The resultant image has the width of the bigger image.
+
+
+int[2] hadamard_product( int[2] x, int[2] y)
+int[3] cross_product( int[3] x, int[3] y)
+int dot_product( int[2] x, int[2] y)
+As described in Image Algebra.
+
+double euclidean_norm( int[2] x)
+double p_norm( int[2] x, int p)
+int infinity_norm( int[2] x)
+As described in Image Algebra.
+
+double euclidean_distance( int[2] x, int[2] y)
+double cityblock_distance( int[2] x, int[2] y)
+int chessboard_distance( int[2] x, int[2] y)
+As described in Image Algebra.
+
+
+
+2.4 Image operations:
+
+value[+] linear_convolution( value[+] img, value[+] t)
+Returns the right linear convolution product of img and t.
+
+value[+] max_convolution( value[+] img, value[+] t)
+Returns the right morphological max convolution product of img and t.
+
+value[+] min_convolution( value[+] img, value[+] t)
+Returns the right morphological min convolution product of img and t.
+
+value[+] convolution_2d( value[+] img, int[+] t)
+(as described in the RIPL paper) 2D convolution operator ⊕. A convolution of an M × N image a with an int template t of size (2m − 1) × (2n − 1) centred at the origin.
+
+value[+] convolution_2d( value[+] img, value[+] t)
+(as described in the RIPL paper) 2D convolution operator ⊕. A convolution of an M × N image a with a valued template t of size (2m − 1) × (2n − 1) centred at the origin.
+
+
+value[+] template( value[+] img)
+Returns an image of the appropriate 1s with the shape of img.
+
+value[+] transpose( value[+] img)
+Returns a rotated and flipped version of img.
+
+value[+] absolute( value[+] img)
+Returns an image whose values are in the range [0,255] by setting values <0 to 0 and >255 to 255.
+
+
+bool characteristics( int[2] x)
+Returns true if all coordinates of x are >= 0.
+
+value[+] characteristics( value[+] img, int[*] greaterthan, int[*] lessthan)
+Returns an image whose pixel values are: 1) the values of img where they are in the interval (greaterthan, lessthan), 2) and the appropriate 0 otherwise.
+
+
+int[5,2] neighb_vn( int[2] x)
+Returns an array of points in the Von Neumann neighbourhood of x.
+
+int[9,2] neighb_m( int[2] x)
+Returns an array of points in the Moore neighbourhood of x.
+
+double[+] recalc_vn_double( value[+] img)
+Returns a double[+] whose pixel values are the exact average of the values of the point's Von Neumann neighbourhood.
+
+value[+] recalc_vn( value[+] img)
+Returns an image whose pixel values are the average of the values of the point's Von Neumann neighbourhood.
+
+double[+] recalc_m_double( value[+] img)
+Returns a double[+] whose pixel values are the exact average of the values of the point's Moore neighbourhood.
+
+value[+] recalc_m( value[+] img)
+Returns an image whose pixel values are the average of the values of the point's Moore neighbourhood.
+
+
+value[+] add_point( value[+] img, int[2] y) 
+Returns an image of values at the points x+p for each x in img. (Point addition as described in Image Algebra.)
+
+
+value[+] pad_nm(value[+] img, value[+] t)
+Returns the image padded with pixels to accommodate work with the template t from the first pixel onwards.
+
+value[+] pad_nm( value[+] img, int n, int m)
+Returns the image padded with nxm pixels whose values are the same as the values of the pixels in the border of img.
+
+
+
+2.5 SAC Array operations:
+
+int dim( value[*] a)
+int[.] shape( value[*] a)
+value[*] sel( int[.] iv, value[*] a)
+value[*] sel( int iv, value[*] a)
+
+value[*] reshape( int[.] shp, value[*] a)
+value[*] genarray( int[.] shp, value[*] val)
+value[*] modarray( value[*] array, int[.] v, value val)
+value[*] modarray( value[*] array, int v, value[*] val)
+value[*] take( int[.] shp, value[*] array)
+value[*] tile( int[.] shp, int[.] idx, value[*] array)
+value[+] shift( int[.] counts, int boundary, value[+] A)
+
+
+
+2.6 Default Elements, Selections, Type transformations:
+
+value default_el( value[*] a)
+Returns a 0 in the appropriate type ((rgb)[0,0,0] for rgb, (greyscale)0 for greyscale), to be used by other functions (e.g. genarray).
+
+value[+] default_el( value[*] a, int[.] shp)
+Returns an array of 0s in the appropriate type, with the shape specified.
+
+
+int r( rgb a)
+int g( rgb a)
+int b( rgb a)
+Returns the R, G, or B value of an rgb.
+
+
+int[*] to_type( value[*] a)
+As greyscale and rgb are currently built over int, does the same as toi().
+
+int[*] toi( value[*] a)
+double[*] tod( value[*] a)
+
+
+greyscale[*] togreyscale( bool[*] a)
+greyscale[*] togreyscale( double[*] a)
+greyscale[.,.] togreyscale( Color8::color[.,.] img)
+To turn an int[*] to greyscale[*], simply cast:
+(greyscale[*])img
+
+
+rgb[*] torgb( bool[*] a)
+Turns an bool[*] to rgb[*], expecting its elements to have explicit values for R, G, and B
+rgb[*] torgb( double[*] a)
+Turns an double[*] to rgb[*], expecting its elements to have explicit values for R, G, and B
+rgb[.,.] torgb( Color8::color[.,.] img)
+
+
+rgb[*] to_multichannel( int[*] a)
+Turns an int[*] to rgb[*] by putting in the same value for R, G, and B in the resultant image.
+To turn an int[*] of explicit values for R, G, and B to rgb[*], simply cast:
+(rgb[*])img
+
+
+
+2.7 I/O:
+
+greyscale[.,.] read_greyscale( string name)
+Reads a .bmp file as greyscale
+
+rgb[.,.] read_rgb( string name)
+Reads a .bmp file as rgb
+
+void write( value[.,.] img, string name)
+Writes a .bmp file from value[.,.]
+
+void print( value[*] a)
+Prints a value[*]
+To print anything else (int, double, ...), use StdIO::print()
+
+
+
+
+
+
+
+
+
+
+
+
+
+3. A LIST OF JUST THE FUNCTIONS (NO DESCRIPTIONS):
+
+Arithmetic:
+value[*] -( value[*] a)
+
+value[*] +( value[*] a, value[*] b)
+value[*] +( value[*] a, int[*] b)
+value[*] +( int[*] a, value[*] b)
+rgb[+] +( rgb[+] a, rgb b)
+rgb[+] +( rgb a, rgb[+] b)
+
+value[*] -( value[*] a, value[*] b)
+value[*] -( value[*] a, int[*] b)
+value[*] -( int[*] a, value[*] b)
+rgb[+] -( rgb[+] a, rgb b)
+
+value[*] *( int[*] a, value[*] b)
+value[*] *( value[*] a, value[*] b)
+value[*] *( value[*] a, int[*] b)
+rgb[+] *( rgb[+] a, rgb b)
+rgb[+] *( rgb a, rgb[+] b)
+
+value[*] /( value[*] a, value[*] b)
+value[*] /( value[*] a, int[*] b)
+value[*] /( int[*] a, value[*] b)
+rgb[+] /( rgb[+] a, rgb b)
+rgb[+] /( rgb a, rgb[+] b)
+
+value sum( value[*] a)
+
+value pow( value a, value b)
+value[+] pow( value[+] a, value[+] b)
+value[+] pow( value[+] a, value b)
+value[+] pow( value[+] a, int k)
+value[+] pow( value[+] a, double k)
+value[+] sqrt( value[+] img)
+
+
+
+Boolean:
+bool[*] ==( value[*] a, value[*] b)
+bool[*] ==( value[*] a, int[*] b)
+bool[*] ==( int[*] a, value[*] b)
+
+bool[*] !=( value[*] a, value[*] b)
+bool[*] !=( value[*] a, int[*] b)
+bool[*] !=( int[*] a, value[*] b)
+
+bool[*] <( value[*] a, value[*] b)
+bool[*] <( value[*] a, int[*] b)
+bool[*] <( int[*] a, value[*] b)
+
+bool[*] <=( value[*] a, value[*] b)
+bool[*] <=( value[*] a, int[*] b)
+bool[*] <=( int[*] a, value[*] b)
+
+bool[*] >( value[*] a, value[*] b)
+bool[*] >( value[*] a, int[*] b)
+bool[*] >( int[*] a, value[*] b)
+
+bool[*] >=( value[*] a, value[*] b)
+bool[*] >=( value[*] a, int[*] b)
+bool[*] >=( int[*] a, value[*] b)
+
+
+
+int max( int[2] x)
+value max( value[*] a)
+value[*] max( value[*] a, value[*] b)
+int min(int[2] x)
+value min( value[*] a)
+value[*] min( value[*] a, value[*] b)
+int sup( int[2] x)
+int[2] sup(int[2] x, int[2] y)
+int inf( int[2] x)
+int[2] inf( int[2] x, int[2] y)
+
+int[2] floor( double[2] x)
+int[2] ceil( double[2] x)
+int[2] round( double[2] x)
+
+int[2] choice( value[+] img)
+int card( value[+] img)
+int dimension( int[2] x) (as described in Image Algebra, not SAC)
+
+value[+] ++( value[+] a, value[+]b)
+
+
+
+int[2] hadamard_product( int[2] x, int[2] y)
+int[3] cross_product( int[3] x, int[3] y)
+int dot_product( int[2] x, int[2] y)
+
+double euclidean_norm( int[2] x)
+double p_norm( int[2] x, int p)
+int infinity_norm( int[2] x)
+
+double euclidean_distance( int[2] x, int[2] y)
+double cityblock_distance( int[2] x, int[2] y)
+int chessboard_distance( int[2] x, int[2] y)
+
+
+
+Image operations:
+value[+] linear_convolution( value[+] img, value[+] t)
+value[+] max_convolution( value[+] img, value[+] t)
+value[+] min_convolution( value[+] img, value[+] t)
+value[+] convolution_2d( value[+] img, int[+] t)
+value[+] convolution_2d( value[+] img, value[+] t)
+
+value[+] template( value[+] img)
+value[+] transpose( value[+] img)
+value[+] absolute( value[+] img)
+
+bool characteristics( int[2] x)
+value[+] characteristics( value[+] img, int[*] greaterthan, int[*] lessthan)
+
+int[5,2] neighb_vn( int[2] x)
+int[9,2] neighb_m( int[2] x)
+double[+] recalc_vn_double( value[+] img)
+value[+] recalc_vn( value[+] img)
+double[+] recalc_m_double( value[+] img)
+value[+] recalc_m( value[+] img)
+
+value[+] add_point( value[+] img, int[2] y) 
+
+value[+] pad_nm(value[+] img, value[+] t)
+value[+] pad_nm( value[+] img, int n, int m)
+
+
+
+SAC Array operations:
+int dim( value[*] a)
+int[.] shape( value[*] a)
+value[*] sel( int[.] iv, value[*] a)
+value[*] sel( int iv, value[*] a)
+
+value[*] reshape( int[.] shp, value[*] a)
+value[*] genarray( int[.] shp, value[*] val)
+value[*] modarray( value[*] array, int[.] v, value val)
+value[*] modarray( value[*] array, int v, value[*] val)
+value[*] take( int[.] shp, value[*] array)
+value[*] tile( int[.] shp, int[.] idx, value[*] array)
+value[+] shift( int[.] counts, int boundary, value[+] A)
+
+
+
+Default Elements, Selections, Type transformations:
+
+value default_el( value[*] a)
+value[+] default_el( value[*] a, int[.] shp)
+
+int r( rgb a)
+int g( rgb a)
+int b( rgb a)
+
+int[*] to_type( value[*] a)
+int[*] toi( value[*] a)
+double[*] tod( value[*] a)
+
+greyscale[*] togreyscale( bool[*] a)
+greyscale[*] togreyscale( double[*] a)
+greyscale[.,.] togreyscale( Color8::color[.,.] img)
+
+rgb[*] torgb( bool[*] a)
+rgb[*] torgb( double[*] a)
+rgb[.,.] torgb( Color8::color[.,.] img)
+
+rgb[*] to_multichannel( int[*] a)
+
+
+
+I/O:
+greyscale[.,.] read_greyscale( string name)
+rgb[.,.] read_rgb( string name)
+void write( value[.,.] img, string name)
+void print( value[*] a)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. A LIST OF FUNCTIONS BY FILE:
+
+points.sac:
+int max( int[2] x)
+int min(int[2] x)
+int sup( int[2] x)
+int[2] sup(int[2] x, int[2] y)
+int inf( int[2] x)
+int[2] inf( int[2] x, int[2] y)
+int[2] floor( double[2] x)
+int[2] ceil( double[2] x)
+int[2] round( double[2] x)
+bool characteristics( int[2] x)
+int dimension( int[2] x) (as described in Image Algebra, not SAC)
+int[2] hadamard_product( int[2] x, int[2] y)
+int[3] cross_product( int[3] x, int[3] y)
+int dot_product( int[2] x, int[2] y)
+double euclidean_norm( int[2] x)
+double p_norm( int[2] x, int p)
+int infinity_norm( int[2] x)
+double euclidean_distance( int[2] x, int[2] y)
+double cityblock_distance( int[2] x, int[2] y)
+int chessboard_distance( int[2] x, int[2] y)
+int[5,2] neighb_vn( int[2] x)
+int[9,2] neighb_m( int[2] x)
+
+greyscale.sac:
+greyscale[*] -( greyscale[*] a)
+greyscale[*] +( greyscale[*] a, greyscale[*] b)
+greyscale[*] +( greyscale[*] a, int[*] b)
+greyscale[*] +( int[*] a, greyscale[*] b)
+greyscale[*] -( greyscale[*] a, greyscale[*] b)
+greyscale[*] -( greyscale[*] a, int[*] b)
+greyscale[*] -( int[*] a, greyscale[*] b)
+greyscale[*] *( int[*] a, greyscale[*] b)
+greyscale[*] *( greyscale[*] a, greyscale[*] b)
+greyscale[*] *( greyscale[*] a, int[*] b)
+greyscale[*] /( greyscale[*] a, greyscale[*] b)
+greyscale[*] /( greyscale[*] a, int[*] b)
+greyscale[*] /( int[*] a, greyscale[*] b)
+bool[*] ==( greyscale[*] a, greyscale[*] b)
+bool[*] ==( greyscale[*] a, int[*] b)
+bool[*] !=( greyscale[*] a, greyscale[*] b)
+bool[*] !=( greyscale[*] a, int[*] b)
+bool[*] <( greyscale[*] a, greyscale[*] b)
+bool[*] <( greyscale[*] a, int[*] b)
+bool[*] <=( greyscale[*] a, greyscale[*] b)
+bool[*] <=( greyscale[*] a, int[*] b)
+bool[*] >( greyscale[*] a, greyscale[*] b)
+bool[*] >( greyscale[*] a, int[*] b)
+bool[*] >=( greyscale[*] a, greyscale[*] b)
+bool[*] >=( greyscale[*] a, int[*] b)
+greyscale[+] ++( greyscale[+] a, greyscale[+]b)
+greyscale default_el( greyscale[*] a)
+greyscale[+] default_el( greyscale[*] a, int[.] shp)
+int[*] to_type( greyscale[*] a)
+int[*] toi( greyscale[*] a)
+greyscale[*] togreyscale( double[*] a)
+greyscale[*] togreyscale( bool[*] a)
+greyscale[.,.] togreyscale( Color8::color[.,.] img)
+greyscale[*] prepare_template_greyscale( int[*] t)
+double[*] tod( greyscale[*] a)
+greyscale min( greyscale[*] a)
+greyscale[*] min( greyscale[*] a, greyscale[*] b)
+greyscale max( greyscale[*] a)
+greyscale[*] max( greyscale[*] a, greyscale[*] b)
+greyscale sum( greyscale[*] a)
+int dim( greyscale[*] a)
+int[.] shape( greyscale[*] a)
+greyscale[*] sel( int[.] iv, greyscale[*] a)
+greyscale[*] sel( int iv, greyscale[*] a)
+greyscale[*] reshape( int[.] shp, greyscale[*] a)
+greyscale[*] genarray( int[.] shp, greyscale[*] val)
+greyscale[*] modarray( greyscale[*] array, int[.] v, greyscale val)
+greyscale[*] modarray( greyscale[*] array, int v, greyscale[*] val)
+greyscale[*] take( int[.] shp, greyscale[*] array)
+greyscale[*] tile( int[.] shp, int[.] idx, greyscale[*] array)
+greyscale[+] shift( int[.] counts, int boundary, greyscale[+] A)
+void print( greyscale[*] a)
+
+rgb.sac:
+rgb[*] -( rgb[*] a)
+rgb[*] +( rgb[*] a, rgb[*] b)
+rgb[+] +( rgb[+] a, rgb b)
+rgb[+] +( rgb a, rgb[+] b)
+rgb[*] +( rgb[*] a, int[*] b)
+rgb[*] +( int[*] a, rgb[*] b)
+rgb[*] -( rgb[*] a, rgb[*] b)
+rgb[+] -( rgb[+] a, rgb b)
+rgb[*] -( rgb[*] a, int[*] b)
+rgb[*] -( int[*] a, rgb[*] b)
+rgb[*] *( rgb[*] a, rgb[*] b)
+rgb[+] *( rgb[+] a, rgb b)
+rgb[+] *( rgb a, rgb[+] b)
+rgb[*] *( rgb[*] a, int[*] b)
+rgb[*] *( int[*] a, rgb[*] b)
+rgb[*] /( rgb[*] a, rgb[*] b)
+rgb[*] /( rgb[*] a, int[*] b)
+rgb[*] /( int[*] a, rgb[*] b)
+rgb[+] /( rgb[+] a, rgb b)
+rgb[+] /( rgb a, rgb[+] b)
+bool[*] ==( rgb[*] a, rgb[*] b)
+bool[+] ==( rgb[+] a, rgb b)
+bool[+] ==( rgb a, rgb[+] b)
+bool[*] ==( rgb[*] a, int[*] b)
+bool[*] ==( int[*] a, rgb[*] b)
+bool[*] !=( rgb[*] a, rgb[*] b)
+bool[+] !=( rgb[+] a, rgb b)
+bool[+] !=( rgb a, rgb[+] b)
+bool[*] !=( rgb[*] a, int[*] b)
+bool[*] !=( int[*] a, rgb[*] b)
+bool[*] <( rgb[*] a, rgb[*] b)
+bool[+] <( rgb[+] a, rgb b)
+bool[+] <( rgb a, rgb[+] b)
+bool[*] <( rgb[*] a, int[*] b)
+bool[*] <( int[*] a, rgb[*] b)
+bool[*] <=( rgb[*] a, rgb[*] b)
+bool[+] <=( rgb[+] a, rgb b)
+bool[+] <=( rgb a, rgb[+] b)
+bool[*] <=( rgb[*] a, int[*] b)
+bool[*] <=( int[*] a, rgb[*] b)
+bool[*] >( rgb[*] a, rgb[*] b)
+bool[+] >( rgb[+] a, rgb b)
+bool[+] >( rgb a, rgb[+] b)
+bool[*] >( rgb[*] a, int[*] b)
+bool[*] >( int[*] a, rgb[*] b)
+bool[*] >=( rgb[*] a, rgb[*] b)
+bool[+] >=( rgb[+] a, rgb b)
+bool[+] >=( rgb a, rgb[+] b)
+bool[*] >=( rgb[*] a, int[*] b)
+bool[*] >=( int[*] a, rgb[*] b)
+rgb[+] ++( rgb[*] a, rgb[*]b)
+rgb default_el( rgb[*] a)
+bool[3] default_el_bool()
+int[*] to_type( rgb[*] a)
+int[*] toi( rgb[*] a)
+int r( rgb a)
+int g( rgb a)
+int b( rgb a)
+rgb[*] torgb( double[*] a)
+rgb[*] torgb( bool[*] a)
+rgb[.,.] torgb( Color8::color[.,.] img)
+rgb[*] to_multichannel( int[*] a)
+double[*] tod( rgb[*] a)
+rgb min( rgb[*] valset)
+rgb[*] min( rgb[*] a, rgb[*] b)
+rgb max( rgb[*] valset)
+rgb[*] max( rgb[*] a, rgb[*] b)
+rgb sum( rgb[*] valset)
+int dim( rgb[*] a)
+int[.] shape( rgb[*] a)
+rgb[*] sel( int[.] iv, rgb[*] a)
+rgb[*] sel( int iv, rgb[*] a)
+rgb[*] reshape( int[.] shp, rgb[*] a)
+rgb[*] genarray( int[.] shp, rgb[*] val)
+rgb[*] modarray( rgb[*] array, int[.] v, rgb val)
+rgb[*] modarray( rgb[*] array, int v, rgb[*] val)
+rgb[*] take( int[.] shp, rgb[*] array)
+rgb[*] tile( int[.] shp, int[.] idx, rgb[*] array)
+rgb[+] shift( int[.] counts, int boundary, rgb[+] A)
+void print(rgb[*] a)
+
+image.mac:
+value[+] linear_convolution( value[+] img, value[+] t)
+value[+] max_convolution( value[+] img, value[+] t)
+value[+] min_convolution( value[+] img, value[+] t)
+value[+] convolution_2d( value[+] img, int[+] t)
+value[+] convolution_2d( value[+] img, value[+] t)
+value[+] template( value[+] img)
+value[+] transpose( value[+] img)
+double[+] recalc_vn_double( value[+] img)
+value[+] recalc_vn( value[+] img)
+double[+] recalc_m_double( value[+] img)
+value[+] recalc_m( value[+] img)
+value[+] add_point( value[+] img, int[2] y) 
+value[+] pad_nm(value[+] img, value[+] t)
+value[+] pad_nm( value[+] img, int n, int m)
+int[2] choice( value[+] img)
+int card( value[+] img)
+value pow( value a, value b)
+value[+] pow( value[+] a, value[+] b)
+value[+] pow( value[+] a, value b)
+value[+] pow( value[+] a, int k)
+value[+] pow( value[+] a, double k)
+value[+] sqrt( value[+] img)
+value[+] absolute( value[+] img)
+value[+] characteristics( value[+] img, int[*] greaterthan, int[*] lessthan)
+rgb[.,.] read_rgb( string name)
+greyscale[.,.] read_greyscale( string name)
+void write( value[.,.] img, string name)

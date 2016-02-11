@@ -1,0 +1,198 @@
+p is an int[2,2]
+value is rgb or greyscale
+img is an array of type value
+k is a scalar
+
+Negation 
+-
+p → p
+img → img
+value → value
+
+Addition, Subtraction, Multiplicaiton, Division
++, -, *
+p x p → p
+k x p → p
+p x k → p
+img x img → img (same shape)
+img x k → img (int k)
+k x img → img (int k)
+img x [k] → img (same shape, int k)
+[k] x img → img (same shape, int k)
+img x value → img
+value x img → img (Addition and Multiplication only)
+
+Power
+pow()
+value x value → value
+img x value → img
+img x k → img (int k or double k)
+img x img → img (same shape)
+
+Square root
+sqrt()
+img → img
+
+Sum
+sum()
+p → k
+[p] → p
+img → value
+
+Boolean operations
+==, !=, <, <=, >, >=
+p x p → [bool]
+p x k → [bool] (int k)
+greyscale x greyscale → bool
+rgb x rgb → [bool]
+img x img → [bool] (same shape)
+img x value → [bool]
+value x img → [bool]
+value x k → bool (int k)
+k x value → bool (int k)
+
+Concatenation
+++
+p x p → [x1, x2, y1, y2]
+img x img → img
+
+Supremum
+sup() or max()
+p → int
+p x p → p
+
+Infimum
+inf() or min()
+p → int
+p x p → p
+
+Maximum
+max()
+p → int
+p x p → p
+img → value
+img x img → img
+
+Minimum
+min()
+p → int
+p x p → p
+img → value
+img x img → img
+
+Floor, Ceiling, Round
+floor(), ceil(), round()
+p → p
+
+Choice
+choice()
+img → p
+
+Cardinality
+card()
+img → k
+
+Dimension (as described in Image Algebra, not SAC)
+dimension()
+p → k
+
+Hadamard product, Cross product, 
+hadamard_product(), cross_product()
+p → p
+
+Dot product
+dot_product()
+p → int
+
+Euclidean norm, Infinity norm
+euclidean_norm(), infinity_norm()
+p → k
+
+P-norm
+p_norm()
+p x int → k
+
+Euclidean Distance, Cityblock Distance, Chessboard Distance
+euclidean_distance(), cityblock_distance(), chessboard_distance()
+p x p → k
+
+Von Neuman Neighbourhood, Moore Neighbourhood
+neighb_vn(), neighb_m()
+p → [p]
+
+Neighbourhood value recalculation
+recalc_vn(), recalc_vn_double(), recalc_m(), recalc_m_double()
+img → img
+img → [double]
+
+Linear Convolution, Maximum Convolution, Minimum Convolution
+linear_convolution(), max_convolution(), min_convolution()
+img x img → img
+
+2d Convolution
+convolution_2d()
+img x img → img
+img x [int] → img
+
+Template, Transpose, Absolute
+template(), transpose(), absolute()
+img → img
+
+Characteristics
+p → bool
+img x k x k → img
+
+Point addition
+add_point()
+img x p → img
+
+Padding
+pad_nm()
+img x img → img
+img x k x k → img
+
+Read
+read_rgb(), read_greyscale()
+bmp file → img
+
+Write
+write()
+img → bmp file
+
+Print
+Use print() for rgb/greyscale or StdIO::print() for everything else
+
+SAC functions on images:
+dim()
+shape()
+sel()
+reshape()
+genarray()
+modarray()
+take()
+tile()
+shift()
+
+r(), g(), b()
+rgb → int
+
+default_el( value[*] a)
+img → value
+
+to_type( value[*] a); toi( value[*] a)
+value → int or [int]
+img → [int]
+
+torgb()
+double[*] → rgb[*]
+bool[*] → rgb[*]
+Color8[.,.] → rgb[.,.]
+
+to_multichannel()
+[int] → [rgb]
+
+tod()
+rgb → [double]
+greyscale → double
+img → [double]
+

@@ -14,14 +14,19 @@ Your standard library was built without the BMP module.
 
 
 If you want any sac files outside the RIPL lib directory to use this library, you can compile them with
+
 sac2c -L "/path/to/sac/ripl/lib" file.sac
 
+
 To remove the lengthy compiler output in the terminal, compile with:
+
 sac2c -v1 file.sac
 
 
 Documentation available in
+
 doc-mathematical_operations.txt : In set notation, similar to Image Algebra description
 doc-functions.txt 				: A description of this library's functions and some other useful things for doing image processing in SAC.
+
 
 Usage examples available in examples/.

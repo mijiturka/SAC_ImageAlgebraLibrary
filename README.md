@@ -6,7 +6,7 @@ Based on the mathematical model of Image Algebra (Ritter), implementing basic op
 To use it, run make in the ripl directory:
 make
 
-For this library, you need your SAC standard library built with the BMP module (it isn't by default). 
+For this library, you need your SAC standard library built with the BMP module (it isn't by default). \n
 Edit stdlib/configure and change ENABLE_SDL="no" to ENABLE_SDL="yes", then run configure and make again.
 If you get the following message:
 Cannot find library `libBMPTree.so' for module `BMP'

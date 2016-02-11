@@ -12,8 +12,7 @@ Edit stdlib/configure and change ENABLE_SDL="no" to ENABLE_SDL="yes", then run c
 
 If you get the following message:
 
-Cannot find library `libBMPTree.so' for module `BMP'
-
+Cannot find library `libBMPTree.so' for module `BMP'\n
 Your standard library was built without the BMP module. 
 
 -

@@ -10,10 +10,9 @@ For this library, you need your SAC standard library built with the BMP module (
 
 Edit stdlib/configure and change ENABLE_SDL="no" to ENABLE_SDL="yes", then run configure and make again.
 
-If you get the following message:
+Your standard library was built without the BMP module if you get the following message:
 
-Cannot find library `libBMPTree.so' for module `BMP'\n
-Your standard library was built without the BMP module. 
+Cannot find library `libBMPTree.so' for module `BMP'
 
 -
 If you want any sac files outside the RIPL lib directory to use this library, you can compile them with
